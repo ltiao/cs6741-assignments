@@ -213,7 +213,9 @@ From (1) we can reduce \textsc{Packing} to \textsc{Independent set} in poly-time
 
 \section{$d$-\sc Packing \textnormal{is $W[1]$-hard for parameter $k$}}
 
-Reduction to \textsc{Independent Set}. For $d$ odd, add in $d-1/2$ new vertices between each edge and run $d$-\textsc{Packing}. Map intermediate vertices back to closest ``original'' vertices if selected. This is a solution to $d=1$ packing, and hence independent set (since they are the same).
+Reduction to \textsc{Independent Set}. For $d$ odd, add in $d-1/2$ new vertices between each edge and run $d$-\textsc{Packing}. Map intermediate vertices back to closest ``original'' vertices if selected. This is a solution to $d=1$ packing, and hence independent set (since they are the same). Notice that we may match an added vertex with another added vertex, but it will preserve the fact that we get a YES case after the reduction if prior to it, it was a YES case.
+
+For $d = 2k$ even, add in $d/2$ new vertices on paths between any two original vertices. Then for each of these added vertices, add in a path of length $d-1 = 2k-1$ between add ADDED vertices. Now, notice that between any two original vertices which were adjacent, they are of distance $d/2 + 1$, but if they were not neighbors, they are now of distance $d-1 + 2 = d+1$ apart. It can be left an an exercise to the read to prove that this is correct.
 
 \section{\sc Packing \textnormal{is FPT for parameter $d + tw(G)$}}
 
