@@ -190,7 +190,7 @@ A polynomial space branching algorithm for \#\textsc{Packing} is described below
 
 If $d = 0$ then the time complexity is at worse $n^{O(1)}$ since we just need to count the number vertices and raise 2 to that power. Since this is a polynomial time case, then we also guarantee the usage of polynomial space.
 
-If $d = 1$, then Wahlstr\"{o}m's algorithm guarantees that a polynomial amount of space is taken and the time complexity if $O^*(1.2377^n)$. Furthermore, since \#\textsc{Independent Set} is a polynomial-space branching algorithm, then this case of \textsc{\# Packing} is also a polynomial space branching algorithm.
+If $d = 1$, then Wahlstr\"{o}m's algorithm \cite{Wahlstr2008} guarantees that a polynomial amount of space is taken and the time complexity if $O^*(1.2377^n)$. Furthermore, since \#\textsc{Independent Set} is a polynomial-space branching algorithm, then this case of \textsc{\# Packing} is also a polynomial space branching algorithm.
 
 If $d \geq 2$ then we create a new graph $G'$ be adding in edges between two vertices who have a distance less than or equal to $k$. Then any two vertices which do not share an edge in $G'$ must be of distance $d+1$ or greater apart. Notice that the time complexity of adding the new edges is at most $O(n \times n^d) = O(n^{d+1})$ since for each vertex, a search for vertices of distance less or equal to than $d$ can branch no more than $n-1 \leq n$ times, to a depth of no more than $d$. As any independent set in $G'$ is thus a $d$-packing in $G$ then transforming $G$ to $G'$ and then running Wahlstr\"{o}m's \#\textsc{Independent Set} counts the number of $d$-packings in time $O(n^{d+1}) + O^*(1.2377^n) = O^*(1.2377^n)$ as $d$ is fixed. Since the extra computation to transform $G$ to $G'$ requires only $O(n^{d+1})$ time then at most it requires polynomial space. As \#\textsc{Independent Set} is a polynomial space branching algorithm then to solve for the case $d \geq 2$ we also have a polynomial-space branching algorithm.
 
@@ -218,5 +218,8 @@ Reduction to \textsc{Independent Set}. For $d$ odd, add in $d-1/2$ new vertices 
 For $d = 2k$ even, add in $d/2$ new vertices on paths between any two original vertices. Then for each of these added vertices, add in a path of length $d-1 = 2k-1$ between add ADDED vertices. Now, notice that between any two original vertices which were adjacent, they are of distance $d/2 + 1$, but if they were not neighbors, they are now of distance $d-1 + 2 = d+1$ apart. It can be left an an exercise to the read to prove that this is correct.
 
 \section{\sc Packing \textnormal{is FPT for parameter $d + tw(G)$}}
+
+\bibliographystyle{plain}
+\bibliography{asst2}
 
 \end{document}
