@@ -15,6 +15,8 @@
 \usepackage{titling}
 \usepackage[lined,boxed,commentsnumbered,vlined]{algorithm2e}
 
+\usepackage{todonotes}
+
 % For writing code:
 \usepackage{fancyvrb}
 \DefineVerbatimEnvironment{code}{Verbatim}{fontsize=\small}
@@ -86,7 +88,9 @@
 \newcommand{\mcH}{\mathcal{H}}
 \newcommand{\mcl}{\mathcal{l}}
 \newcommand{\mcU}{\mathcal{U}}
+
 \newcommand{\mcI}{\mathcal{I}}
+\newcommand{\mcO}{\mathcal{O}}
 
 \newcommand{\bfe}{\mathbf{e}}
 \newcommand{\mbf}{\mathbf}
@@ -119,6 +123,9 @@
 
 \begin{document}
 \maketitle
+
+\todo{Consistency between British and American spelling (i.e. colour vs. color)}
+\todo{Spellcheck}
 
 \section*{Preliminaries}
 
@@ -168,6 +175,8 @@ For a sequence of $k$ non-negative integers $D = (d_1,...,d_k)$, a \emph{D-packi
 
 \section{\#\sc Packing}
 
+\todo{Formalize and Proofread}
+
 A polynomial space branching algorithm for \#\textsc{Packing} is described below. Let $G = (V,E)$ and $n = |V|$
 
 \begin{algorithm}[H]
@@ -199,6 +208,8 @@ If $d \geq 2$ then we create a new graph $G'$ be adding in edges between two ver
 
 \section{\sc Packing Colouring  (\textnormal{Exponential space})}
 
+\todo{Proofread}
+
 First note that a $k$-coloring of a graph is a special case of a $D$-packing coloring 
 where $D = (d_1, d_2, \dotsc, d_k) = (1, 1, \dotsc, 1)$. As such, we can consider extending
 the solution to the \textsc{Coloring} problem to solve the \textsc{Packing Coloring} problem.
@@ -226,17 +237,33 @@ where $p(X, d)$ is the number of $d$-packings in $G[X]$ (the subgraph induced by
 	p(X, d) &= \sum_{v \in X} p(X \setminus {v}, d) + p(X \setminus N_G^d[v], d)   
 \end{align*}
 
-(n.b. $N_G^d[v]$ denotes the closed $d$th neighborhood of $v$.)
+(n.b. $N_G^d[v]$ denotes the closed $d$th neighborhood of $v$.) The table for $p(X, d)$ is filled by increasing cardinalities of $X$ and therefore we compute it $\mcO^*(2^n)$ time and space. 
+
+Finally, we evaluate
+
+\begin{equation} \label{eq:incl_excl_final}
+	\left | \bigcap_{v \in V} A_v \right | 
+	= \sum_{S \subseteq V} (-1)^{|S|} \left | \bigcap_{v \in S} \overline{A_v} \right | 
+	= \sum_{S \subseteq V} (-1)^{|S|} \prod_{i=1}^{k} p(V \setminus S, d_i)
+\end{equation}
+
+in $\mcO^*(2^n)$ time and space. We can decide whether $G$ has a $D$-packing coloring by checking that $G$ has at least one $D$-packing coloring ($\left | \bigcap_{v \in V} A_v \right | > 0$). Therefore, \textsc{Packing Coloring} can be solved in $\mcO^*(2^n)$ time and space.
 
 \section{\sc Packing Colouring (\textnormal{Polynomial space})}
 
-Same as above but with the polynomial space variant
+\todo{Proofread}
+
+Consider the algorithm from (1) (based on the algorithm by \cite{Wahlstr2008,Dahllof2005}) which can count the number of $d$-packings in a given graph $G$ and integer $d \ge 0$ in $\mcO^*(1.2377^n)$ time and polynomial-space. Then, we obtain \todo{fill in more details here} a polynomial-space algorithm for \textsc{Packing Coloring} with running time $\mcO^*(2.2377^n)$.
 
 \section{\sc Packing \textnormal{is FPT for parameter $k + d + \Delta (G)$} }
+
+\todo{Formalize and Proofread}
 
 From (1) we can reduce \textsc{Packing} to \textsc{Independent set} in poly-time with parameter $d$. We know that Independent set and Vertex cover can easily be reduced, but with a parameter $k$, Independent set is $W[1]$-hard and not FPT since we are looking for a vertex cover of size $n-k$. However, since we have $\Delta(G)$ as a parameter, we just run \textsc{Vertex Cover} with size $\Delta(G) \times k$, which is still FPT in parameter $k + d + \Delta(G)$.
 
 \section{$d$-\sc Packing \textnormal{is $W[1]$-hard for parameter $k$}}
+
+\todo{Formalize and Proofread}
 
 Reduction to \textsc{Independent Set}. For $d$ odd, add in $d-1/2$ new vertices between each edge and run $d$-\textsc{Packing}. Map intermediate vertices back to closest ``original'' vertices if selected. This is a solution to $d=1$ packing, and hence independent set (since they are the same). Notice that we may match an added vertex with another added vertex, but it will preserve the fact that we get a YES case after the reduction if prior to it, it was a YES case.
 
@@ -246,5 +273,7 @@ For $d = 2k$ even, add in $d/2$ new vertices on paths between any two original v
 
 \bibliographystyle{plain}
 \bibliography{asst2}
+
+\todo{Thanks to mendeley, the references are actually kinda shit. fix this up if we have time}
 
 \end{document}
