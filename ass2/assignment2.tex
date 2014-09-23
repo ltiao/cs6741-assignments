@@ -84,6 +84,7 @@
 \newcommand{\mcH}{\mathcal{H}}
 \newcommand{\mcl}{\mathcal{l}}
 \newcommand{\mcU}{\mathcal{U}}
+\newcommand{\mcI}{\mathcal{I}}
 
 \newcommand{\bfe}{\mathbf{e}}
 \newcommand{\mbf}{\mathbf}
@@ -119,7 +120,7 @@
 
 \section*{Preliminaries}
 
-For completeness and later reference, we restate the \textsc{Packing} , $d$-\textsc{Packing}, \#\textsc{Packing} and \textsc{Packing Colouring} problems presented for this assignment.
+For completeness and later reference, we restate the \textsc{Packing}, $d$-\textsc{Packing}, \#\textsc{Packing} and \textsc{Packing Colouring} problems presented in this assignment.
 
 For an integer $d \geq 0$, a \emph{d-packing} in a graph $G = (V,E)$ is a subset of vertices $S \subseteq V$ such that the distance between any two vertices in $S$ is at least $d$ + 1 in $G$. Denote $d(u,v)$ as the distance between $u,v \in V$.
 
@@ -144,7 +145,7 @@ For a fixed integer $d$,
 The counting variant requires the output of the number of $d$-packings in $G$
 
 \begin{algorithm}[H]
-\textsc{\# Packing\n}
+\textsc{\#Packing\n}
 \begin{tabular}{l l}
  Input:    & A graph $G$, and an integer $d \geq 0$\n
  Question: & The number of $d$-packings in $G$ \n
@@ -163,7 +164,7 @@ For a sequence of $k$ non-negative integers $D = (d_1,...,d_k)$, a \emph{D-packi
 
 \clearpage
 
-\section{\# \sc Packing}
+\section{\#\sc Packing}
 
 A polynomial space branching algorithm for \#\textsc{Packing} is described below. Let $G = (V,E)$ and $n = |V|$
 
@@ -190,11 +191,17 @@ A polynomial space branching algorithm for \#\textsc{Packing} is described below
 
 If $d = 0$ then the time complexity is at worse $n^{O(1)}$ since we just need to count the number vertices and raise 2 to that power. Since this is a polynomial time case, then we also guarantee the usage of polynomial space.
 
-If $d = 1$, then Wahlstr\"{o}m's algorithm \cite{Wahlstr2008} guarantees that a polynomial amount of space is taken and the time complexity if $O^*(1.2377^n)$. Furthermore, since \#\textsc{Independent Set} is a polynomial-space branching algorithm, then this case of \textsc{\# Packing} is also a polynomial space branching algorithm.
+If $d = 1$, then Wahlstr\"{o}m's algorithm \cite{Wahlstrom:2008:TBC:1789694.1789713} guarantees that a polynomial amount of space is taken and the time complexity if $O^*(1.2377^n)$. Furthermore, since \#\textsc{Independent Set} is a polynomial-space branching algorithm, then this case of \textsc{\# Packing} is also a polynomial space branching algorithm.
 
 If $d \geq 2$ then we create a new graph $G'$ be adding in edges between two vertices who have a distance less than or equal to $k$. Then any two vertices which do not share an edge in $G'$ must be of distance $d+1$ or greater apart. Notice that the time complexity of adding the new edges is at most $O(n \times n^d) = O(n^{d+1})$ since for each vertex, a search for vertices of distance less or equal to than $d$ can branch no more than $n-1 \leq n$ times, to a depth of no more than $d$. As any independent set in $G'$ is thus a $d$-packing in $G$ then transforming $G$ to $G'$ and then running Wahlstr\"{o}m's \#\textsc{Independent Set} counts the number of $d$-packings in time $O(n^{d+1}) + O^*(1.2377^n) = O^*(1.2377^n)$ as $d$ is fixed. Since the extra computation to transform $G$ to $G'$ requires only $O(n^{d+1})$ time then at most it requires polynomial space. As \#\textsc{Independent Set} is a polynomial space branching algorithm then to solve for the case $d \geq 2$ we also have a polynomial-space branching algorithm.
 
 \section{\sc Packing Colouring  (\textnormal{Exponential space})}
+
+First note that a $k$-coloring of a graph is a special case of a $D$-packing coloring 
+where $D = (d_1, d_2, \dotsc, d_k) = (1, 1, \dotsc, 1)$. As such, we can consider extending
+the solution to the \textsc{Coloring} problem to solve the \textsc{Packing Coloring} problem.
+
+Recall that a $k$-coloring of a graph $G = (V, E)$ corresponds to a partition of $V$ into $k$ independent sets. So a $k$-coloring is a $k$-partition of the set system $(V, \mcI)$ where $\mcI$ is the set of all independent sets of $G$. In fact, obtaining $k$-cover $I_1, \dotsc, I_k$ of $(V, \mcI)$ would suffice since we can easily obtain a $k$-partition of $(V, \mcI)$ (and hence $k$-coloring of $G$) by removing $\bigcup_{i=1}^{j-1} I_i$ from $I_j$ for $j \in \{1, \dotsc, k\}$.
 
 Use Theorem 4.11 from Exact Exponential Algorithms with
 \begin{itemize}
