@@ -1,0 +1,220 @@
+\documentclass[10pt, a4paper]{article}
+\usepackage{amsmath}
+\usepackage{amssymb}
+\usepackage{amsthm}
+\usepackage{epsfig}
+\usepackage[margin=1in]{geometry}
+%\usepackage{enumitem}
+\usepackage{enumerate}
+\usepackage{graphicx}
+\usepackage{tikz}
+\usetikzlibrary{automata, positioning}
+\usepackage{pgfplots}
+\usepackage{caption}
+\usepackage{mathtools}
+\usepackage{titling}
+\usepackage[lined,boxed,commentsnumbered,vlined]{algorithm2e}
+
+% For writing code:
+\usepackage{fancyvrb}
+\DefineVerbatimEnvironment{code}{Verbatim}{fontsize=\small}
+	\def\showvrb#1{%
+	\texttt{\detokenize{#1}}%
+}
+
+\linespread{1.1}
+\setlength{\parindent}{0pt} % Sets the indent length to 0
+\setlength{\parskip}{8pt plus 1pt minus 1pt} % paragraph vertical distance
+
+\everymath{\displaystyle} % displays inline math as displaymath
+
+% make title smaller
+% \pretitle{\begin{center}\large}
+% \posttitle{\end{center}}
+\preauthor{\begin{center}\normalsize}
+\postauthor{\end{center}}
+\predate{\begin{center}\footnotesize}
+\postdate{\end{center}}
+\setlength{\droptitle}{-60pt}
+
+\title{Assignment 2 - Theoretical Assignment \\
+ COMP6741: Parameterized and Exact Computation}
+\author{Edward Lee, Han Zhou, Louis Tiao}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Commonly used theorems %
+%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+% Use roman for text - numbering follows onwards
+\theoremstyle{definition}
+\newtheorem{defn}{Definition}[section]
+\newtheorem{them}{Theorem}[section]
+\newtheorem{lem}{Lemma}[them]
+\newtheorem{prop}[them]{Proposition}
+\newtheorem{corr}[them]{Corollary}
+\newtheorem{corrr}{Corollary}[them] %for consistency issues
+% examples follow different numbering
+\newtheorem{eg}{Example}[section]
+\newtheorem{egg}[them]{Example}
+\newtheorem*{themf}{Theorem 5.0}
+\newtheorem*{themm}{Theorem}
+
+%%%%%%%%%%%%%
+% Shortcuts %
+%%%%%%%%%%%%%
+
+\newcommand{\Q}{\mathbb{Q}}
+\newcommand{\C}{\mathbb{C}}
+\newcommand{\F}{\mathbb{F}}
+\newcommand{\R}{\mathbb{R}}
+\newcommand{\Z}{\mathbb{Z}}
+\newcommand{\N}{\mathbb{N}}
+\newcommand{\D}{\mathbb{D}}
+
+\newcommand{\mcC}{\mathcal{C}}
+\newcommand{\mcN}{\mathcal{N}}
+\newcommand{\mcE}{\mathcal{E}}
+\newcommand{\mcP}{\mathcal{P}}
+\newcommand{\mcF}{\mathcal{F}}
+\newcommand{\mcS}{\mathcal{S}}
+\newcommand{\mcA}{\mathcal{A}}
+\newcommand{\mcB}{\mathcal{B}}
+\newcommand{\mcX}{\mathcal{X}}
+\newcommand{\mcL}{\mathcal{L}}
+\newcommand{\mcH}{\mathcal{H}}
+\newcommand{\mcl}{\mathcal{l}}
+\newcommand{\mcU}{\mathcal{U}}
+
+\newcommand{\bfe}{\mathbf{e}}
+\newcommand{\mbf}{\mathbf}
+
+\newcommand{\ran}{\mbox{Ran}}
+ 
+\newcommand{\al}{\alpha}
+\newcommand{\s}{\sigma}
+\newcommand{\ep}{\epsilon}
+\newcommand{\dl}{\delta}
+\newcommand{\sg}{\sigma}
+
+\newcommand{\bs}{\backslash}
+\newcommand{\n}{\\}
+\newcommand{\ol}{\overline}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%
+% Standard big brackets %
+%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\newcommand{\floor}[1]{\left\lfloor{#1}\right\rfloor}
+\newcommand{\ceil}[1]{\left\lceil{#1}\right\rceil}
+\newcommand{\bbA}[1]{\left({#1}\right)}
+\newcommand{\bbB}[1]{\left[{#1}\right]}
+\newcommand{\bbC}[1]{\left\{{#1}\right\}}
+
+%%%%%%%%%%%%%%%%%%
+% Start Document %
+%%%%%%%%%%%%%%%%%%
+
+\begin{document}
+\maketitle
+
+\section*{Preliminaries}
+
+For completeness and later reference, we will briefly describe the \textsc{Packing} , $d$-\textsc{Packing}, \#\textsc{Packing} and \textsc{Packing Colouring} problems presented for this assignment.
+
+For an integer $d \geq 0$, a \emph{d-packing} in a graph $G = (V,E)$ is a subset of vertices $S \subseteq V$ such that the distance between any two vertices in $S$ is at least $d$ + 1 in $G$. Denote $d(u,v)$ as the distance between $u,v \in V$.
+
+\begin{algorithm}[H]
+\textsc{Packing\n}
+\begin{tabular}{l l}
+ Input:    & A graph $G$, an integer $d \geq 0$, and an integer $k \geq 0$ \n
+ Question: & Does $G$ have a $d$-packing of size $k$? \n
+\end{tabular}	
+\end{algorithm}
+
+For a fixed integer $d$, 
+
+\begin{algorithm}[H]
+\textsc{$d$-Packing\n}
+\begin{tabular}{l l}
+ Input:    & A graph $G$, and an integer $k \geq 0$ \n
+ Question: & Does $G$ have a $d$-packing of size $k$? \n
+\end{tabular}	
+\end{algorithm}
+
+The counting variant requires the output of the number of $d$-packings in $G$
+
+\begin{algorithm}[H]
+\textsc{\# Packing\n}
+\begin{tabular}{l l}
+ Input:    & A graph $G$, and an integer $d \geq 0$\n
+ Question: & The number of $d$-packings in $G$ \n
+\end{tabular}	
+\end{algorithm}
+
+For a sequence of $k$ non-negative integers $D = (d_1,...,d_k)$, a \emph{D-packing colouring} of a graph $G = (V,E)$ is a partition of the vertex set $V$ into $k$ disjoint sets of vertices, $(S_1,...,S_k)$, such that $S_i$ is a $d_i$-packing in $G$ for each $i \in \{1,...,k\}$. The \textsc{Packing Colouring} problem is defined below
+
+\begin{algorithm}[H]
+\textsc{Packing Colouring\n}
+\begin{tabular}{l l}
+ Input:    & A graph $G$, an integer $k \geq 1$, and a sequence of non-negative integers $D = (d_1,...,d_k)$ \n
+ Question: & Does $G$ have a $D$-packing colouring? \n
+\end{tabular}	
+\end{algorithm}
+
+\clearpage
+
+\section{\# \sc Packing}
+
+A polynomial space branching algorithm for \#\textsc{Packing} is described below. Let $G = (V,E)$ and $n = |V|$
+
+\begin{algorithm}[H]
+\textsc{\#Packing\n}
+\begin{tabular}{l l}
+ Input:  & ($G,d$) \n
+ Output: & Number of $d$-packings in $G$ \n
+\end{tabular}	
+
+\If{$d = 0$}{
+	\textbf{return} $2^n$
+}
+\If{$d = 1$}{
+	Denote by $\#$\textsc{Independent Set} the algorithm to count all independent sets by Wahlstr\"{o}m in time $O^*(1.2377^n)$.\n 
+	\textbf{return} (\#\textsc{Independent Set} with graph $G$)
+}
+\If{$d \geq 2$}{
+	Create a new graph $G' = (V,E')$ where $E' = E \cup E^*$ and $uv \in E^*$ if $d(u,v) \leq k$ in $G$.\n
+	\textbf{return} (\#\textsc{Independent Set} with graph $G'$)
+}
+
+\end{algorithm}
+
+If $d = 0$ then the time complexity is at worse $n^{O(1)}$ since we just need to count the number vertices and raise 2 to that power. Since this is a polynomial time case, then we also guarantee the usage of polynomial space.
+
+If $d = 1$, then Wahlstr\"{o}m's algorithm guarantees that a polynomial amount of space is taken and the time complexity if $O^*(1.2377^n)$. Furthermore, since \#\textsc{Independent Set} is a polynomial-space branching algorithm, then this case of \textsc{\# Packing} is also a polynomial space branching algorithm.
+
+If $d \geq 2$ then we create a new graph $G'$ be adding in edges between two vertices who have a distance less than or equal to $k$. Then any two vertices which do not share an edge in $G'$ must be of distance $d+1$ or greater apart. Notice that the time complexity of adding the new edges is at most $O(n \times n^d) = O(n^{d+1})$ since for each vertex, a search for vertices of distance less or equal to than $d$ can branch no more than $n-1 \leq n$ times, to a depth of no more than $d$. As any independent set in $G'$ is thus a $d$-packing in $G$ then transforming $G$ to $G'$ and then running Wahlstr\"{o}m's \#\textsc{Independent Set} counts the number of $d$-packings in time $O(n^{d+1}) + O^*(1.2377^n) = O^*(1.2377^n)$ as $d$ is fixed. Since the extra computation to transform $G$ to $G'$ requires only $O(n^{d+1})$ time then at most it requires polynomial space. As \#\textsc{Independent Set} is a polynomial space branching algorithm then to solve for the case $d \geq 2$ we also have a polynomial-space branching algorithm.
+
+\section{\sc Packing Colouring  (\textnormal{Exponential space})}
+
+Use Theorem 4.11 from Exact Exponential Algorithms with
+\begin{itemize}
+	\item $\mcU$ = $V \cup \{1,...,k\}$
+	\item $\mcS$ = $\bigcup_{i = 1}^d$ \{ 
+		All $d_i$ packings of $G$ each union with vertex $i$ \}
+\end{itemize}
+
+\section{\sc Packing Colouring (\textnormal{Polynomial space})}
+
+Same as above but with the polynomial space variant
+
+\section{\sc Packing \textnormal{is FPT for parameter $k + d + \Delta (G)$} }
+
+From (1) we can reduce \textsc{Packing} to \textsc{Independent set} in poly-time with parameter $d$. We know that Independent set and Vertex cover can easily be reduced, but with a parameter $k$, Independent set is $W[1]$-hard and not FPT since we are looking for a vertex cover of size $n-k$. However, since we have $\Delta(G)$ as a parameter, we just run \textsc{Vertex Cover} with size $\Delta(G) \times k$, which is still FPT in parameter $k + d + \Delta(G)$.
+
+\section{$d$-\sc Packing \textnormal{is $W[1]$-hard for parameter $k$}}
+
+Reduction to \textsc{Independent Set}. For $d$ odd, add in $d-1/2$ new vertices between each edge and run $d$-\textsc{Packing}. Map intermediate vertices back to closest ``original'' vertices if selected. This is a solution to $d=1$ packing, and hence independent set (since they are the same).
+
+\section{\sc Packing \textnormal{is FPT for parameter $d + tw(G)$}}
+
+\end{document}
