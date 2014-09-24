@@ -237,7 +237,7 @@ where $p(X, d)$ is the number of $d$-packings in $G[X]$ (the subgraph induced by
 	p(X, d) &= \sum_{v \in X} p(X \setminus {v}, d) + p(X \setminus N_G^d[v], d)   
 \end{align*}
 
-(n.b. $N_G^d[v]$ denotes the closed $d$th neighborhood of $v$.) The table for $p(X, d)$ is filled by increasing cardinalities of $X$ and therefore we compute it $\mcO^*(2^n)$ time and space. 
+(n.b. $N_G^i[v]$ denotes the closed $i$th neighborhood of $v$, that is, $u \in N_G^i[v]$ iff $d(u, v) \leq i$.) The table for $p(X, d)$ is filled by increasing cardinalities of $X$ and therefore we compute it $\mcO^*(2^n)$ time and space. 
 
 Finally, we evaluate
 
