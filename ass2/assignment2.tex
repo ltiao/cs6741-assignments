@@ -177,10 +177,22 @@ For a sequence of $k$ non-negative integers $D = (d_1,...,d_k)$, a \emph{D-packi
 
 \todo{Formalize and Proofread}
 
-A polynomial space branching algorithm for \#\textsc{Packing} is described below. Let $G = (V,E)$ and $n = |V|$
+Consider a graph $G = (V, E)$ and let $n = |V|$.
+
+First note that in any graph, the distance between any two distinct vertices is at least 1. Therefore, any subset of vertices $S \subseteq V$ is a $0$-packing, of which there are $2^n$. So for $d=0$, we need only calculate $|V|$ and $2^{|V|}$, which can be done in $\mcO(n)$ time and space.
+
+Denote \texttt{\#Indep-set} the polynomial space and $\mcO^*(1.2377^n)$ time algorithm of Wahlstr\"{o}m \cite{Dahllof2005,Wahlstr2008} that counts the number of independent sets in any graph.
+
+If $d = 1$, then 's algorithm \cite{Dahllof2005,Wahlstr2008} guarantees that a polynomial amount of space is taken and the time complexity if . Furthermore, since \#\textsc{Independent Set} is a polynomial space branching algorithm, then this case of \textsc{\# Packing} is also a polynomial space branching algorithm.
+
+If $d \geq 2$ then we create a new graph $G'$ be adding in edges between two vertices who have a distance less than or equal to $k$. Then any two vertices which do not share an edge in $G'$ must be of distance $d+1$ or greater apart. Notice that the time complexity of adding the new edges is at most $O(n \times n^d) = O(n^{d+1})$ since for each vertex, a search for vertices of distance less or equal to than $d$ can branch no more than $n-1 \leq n$ times, to a depth of no more than $d$. As any independent set in $G'$ is thus a $d$-packing in $G$ then transforming $G$ to $G'$ and then running Wahlstr\"{o}m's \#\textsc{Independent Set} counts the number of $d$-packings in time $O(n^{d+1}) + O^*(1.2377^n) = O^*(1.2377^n)$ as $d$ is fixed. Since the extra computation to transform $G$ to $G'$ requires only $O(n^{d+1})$ time then at most it requires polynomial space. As \#\textsc{Independent Set} is a polynomial space branching algorithm then to solve for the case $d \geq 2$ we also have a polynomial space branching algorithm.
+
+The above is summarized in the polynomial space branching algorithm \ref{algo:num_packing}.
 
 \begin{algorithm}[H]
-\textsc{\#Packing\n}
+\caption{\texttt{\#Packing}}          % give the algorithm a caption
+\label{algo:num_packing} 
+\texttt{\#Packing\n}
 \begin{tabular}{l l}
  Input:  & ($G,d$) \n
  Output: & Number of $d$-packings in $G$ \n
@@ -190,25 +202,18 @@ A polynomial space branching algorithm for \#\textsc{Packing} is described below
 	\textbf{return} $2^n$
 }
 \If{$d = 1$}{
-	Denote by $\#$\textsc{Independent Set} the algorithm to count all independent sets by Wahlstr\"{o}m in time $O^*(1.2377^n)$.\n 
-	\textbf{return} (\#\textsc{Independent Set} with graph $G$)
+	\textbf{return} \texttt{\#Indep-set}($G$)
 }
 \If{$d \geq 2$}{
 	Create a new graph $G' = (V,E')$ where $E' = E \cup E^*$ and $uv \in E^*$ if $d(u,v) \leq k$ in $G$.\n
-	\textbf{return} (\#\textsc{Independent Set} with graph $G'$)
+	\textbf{return} \texttt{\#Indep-set}($G'$)
 }
 
 \end{algorithm}
 
-If $d = 0$ then the time complexity is at worse $n^{O(1)}$ since we just need to count the number vertices and raise 2 to that power. Since this is a polynomial time case, then we also guarantee the usage of polynomial space.
-
-If $d = 1$, then Wahlstr\"{o}m's algorithm \cite{Wahlstr2008,Dahllof2005} guarantees that a polynomial amount of space is taken and the time complexity if $O^*(1.2377^n)$. Furthermore, since \#\textsc{Independent Set} is a polynomial-space branching algorithm, then this case of \textsc{\# Packing} is also a polynomial space branching algorithm.
-
-If $d \geq 2$ then we create a new graph $G'$ be adding in edges between two vertices who have a distance less than or equal to $k$. Then any two vertices which do not share an edge in $G'$ must be of distance $d+1$ or greater apart. Notice that the time complexity of adding the new edges is at most $O(n \times n^d) = O(n^{d+1})$ since for each vertex, a search for vertices of distance less or equal to than $d$ can branch no more than $n-1 \leq n$ times, to a depth of no more than $d$. As any independent set in $G'$ is thus a $d$-packing in $G$ then transforming $G$ to $G'$ and then running Wahlstr\"{o}m's \#\textsc{Independent Set} counts the number of $d$-packings in time $O(n^{d+1}) + O^*(1.2377^n) = O^*(1.2377^n)$ as $d$ is fixed. Since the extra computation to transform $G$ to $G'$ requires only $O(n^{d+1})$ time then at most it requires polynomial space. As \#\textsc{Independent Set} is a polynomial space branching algorithm then to solve for the case $d \geq 2$ we also have a polynomial-space branching algorithm.
+Therefore, \dots
 
 \section{\sc Packing Colouring  (\textnormal{Exponential space})}
-
-\todo{Proofread}
 
 First note that a $k$-coloring of a graph is a special case of a $D$-packing coloring 
 where $D = (d_1, d_2, \dotsc, d_k) = (1, 1, \dotsc, 1)$. As such, we can consider extending
@@ -237,7 +242,7 @@ where $p(X, d)$ is the number of $d$-packings in $G[X]$ (the subgraph induced by
 	p(X, d) &= \sum_{v \in X} p(X \setminus {v}, d) + p(X \setminus N_G^d[v], d)   
 \end{align*}
 
-(n.b. $N_G^i[v]$ denotes the closed $i$th neighborhood of $v$, that is, $u \in N_G^i[v]$ iff $d(u, v) \leq i$.) The table for $p(X, d)$ is filled by increasing cardinalities of $X$ and therefore we compute it $\mcO^*(2^n)$ time and space. 
+(n.b. $N_G^i[v]$ denotes the closed $i$th neighborhood of $v$, that is, $u \in N_G^i[v]$ iff $d(u, v) \leq i$.) The table for $p(X, d)$ is filled by increasing cardinalities of $X$ and therefore we compute it in $\mcO^*(2^n)$ time and space. 
 
 Finally, we evaluate
 
@@ -251,9 +256,12 @@ in $\mcO^*(2^n)$ time and space. We can decide whether $G$ has a $D$-packing col
 
 \section{\sc Packing Colouring (\textnormal{Polynomial space})}
 
-\todo{Proofread}
+We make use of the algorithm from (1) (based on the algorithm by \cite{Wahlstr2008,Dahllof2005}) that counts the number of $d$-packings in a given graph $G$ and integer $d \ge 0$ in $\mcO^*(1.2377^n)$ time and polynomial space. Then, we obtain a polynomial space algorithm for \textsc{Packing Coloring} with running time
+\begin{equation*}
+	\sum_{S\subseteq V} \mcO^*(1.2377^{n-|S|}) = \sum_{s=0}^n \binom{n}{s} \mcO^*(1.2377^{n-s}) = \mcO^*(2.2377^n)
+\end{equation*}
 
-Consider the algorithm from (1) (based on the algorithm by \cite{Wahlstr2008,Dahllof2005}) which can count the number of $d$-packings in a given graph $G$ and integer $d \ge 0$ in $\mcO^*(1.2377^n)$ time and polynomial-space. Then, we obtain \todo{fill in more details here} a polynomial-space algorithm for \textsc{Packing Coloring} with running time $\mcO^*(2.2377^n)$.
+Therefore, \textsc{Packing Coloring} can be solved in $\mcO^*(2.2377^n)$ time and polynomial space.
 
 \section{\sc Packing \textnormal{is FPT for parameter $k + d + \Delta (G)$} }
 
@@ -270,6 +278,23 @@ Reduction to \textsc{Independent Set}. For $d$ odd, add in $d-1/2$ new vertices 
 For $d = 2k$ even, add in $d/2$ new vertices on paths between any two original vertices. Then for each of these added vertices, add in a path of length $d-1 = 2k-1$ between add ADDED vertices. Now, notice that between any two original vertices which were adjacent, they are of distance $d/2 + 1$, but if they were not neighbors, they are now of distance $d-1 + 2 = d+1$ apart. It can be left an an exercise to the read to prove that this is correct.
 
 \section{\sc Packing \textnormal{is FPT for parameter $d + tw(G)$}}
+
+We formalize the property of a graph having a $d$-packing of size $k$ in Monadic Second Order Logic (MSOL) using a formula of length $\mcO(d)$,
+\begin{align*}
+	\mathrm{path}(s, t, d) 		&\coloneqq \exists v_0 \in V, \exists v_1 \in V, \dotsc, \exists v_d \in V
+									\left [ (s=v_0) \wedge (t=v_d) \right.\nonumber \\
+								&\qquad \left. \wedge (adj(v_0, v_1) \wedge adj(v_1, v_2) 
+									\wedge \dots \wedge adj(v_{d-1}, v_d)) \right ] \\
+	\mathrm{isPacking}(X, d)	&\coloneqq \neg \left [\exists u \in X, \exists v \in X (\mathrm{path}(u, v, 1) 
+									\vee \mathrm{path}(u, v, 2) \vee \dots \vee \mathrm{path}(u, v, d) ) \right ] \\
+	\mathrm{Packing} 			&\coloneqq \exists X \subseteq V [(|X| = k) \wedge \mathrm{isPacking}(X, d)]
+\end{align*}
+
+\todo{Discussion: Set cardinality is technically not a part of MSOL. Of course we can define it, but the length of the formula is $\mcO(k^2)$.}
+
+By Courcelle's Theorem, deciding whether a graph satisfies the properties defined by a MSOL formula is FPT, parameterized by the treewidth of $G$ and the length of the formula, which in our case is $\mcO(d)$.
+
+Therefore, it immediately follows that \textsc{Packing} is FPT for parameter $d+tw(G)$ where $tw(G)$ denotes the treewidth of $G$.
 
 \bibliographystyle{plain}
 \bibliography{asst2}
