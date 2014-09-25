@@ -179,15 +179,18 @@ For a sequence of $k$ non-negative integers $D = (d_1,...,d_k)$, a \emph{D-packi
 
 Consider a graph $G = (V, E)$ and let $n = |V|$.
 
-First note that in any graph, the distance between any two distinct vertices is at least 1. Therefore, any subset of vertices $S \subseteq V$ is a $0$-packing, of which there are $2^n$. So for $d=0$, we need only calculate $|V|$ and $2^{|V|}$, which can be done in $\mcO(n)$ time and space.
+First note that in any graph, the distance between any two distinct vertices is at least 1. Therefore, any subset of vertices $S \subseteq V$ is a $0$-packing, of which there are $2^n$. So for $d=0$, we need only calculate $|V|$ and $2^{|V|}$, which can be done in \todo{Why was your previous bound so pessimistic? $n^{\mcO(1)}$}
+ $\mcO(n)$ time and space.
 
-Denote \texttt{\#Indep-set} the polynomial space and $\mcO^*(1.2377^n)$ time algorithm of Wahlstr\"{o}m \cite{Dahllof2005,Wahlstr2008} that counts the number of independent sets in any graph.
+Next observe that in an independent set, the distance between any two distinct vertices is at least 2. Therefore, any independent set of $G$ is a $1$-packing. Denote \texttt{\#Indep-set} the polynomial space and $\mcO^*(1.2377^n)$ time branching algorithm of Wahlstr\"{o}m \cite{Dahllof2005,Wahlstr2008} that counts the number of independent sets in any graph. Then for $d=1$, we simply run \texttt{\#Indep-set} on $G$ and obtain a polynomial space branching algorithm by virtue of the fact that \texttt{\#Indep-set} is a polynomial space branching algorithm.
 
-If $d = 1$, then 's algorithm \cite{Dahllof2005,Wahlstr2008} guarantees that a polynomial amount of space is taken and the time complexity if . Furthermore, since \#\textsc{Independent Set} is a polynomial space branching algorithm, then this case of \textsc{\# Packing} is also a polynomial space branching algorithm.
+For $d \geq 2$ we create a new graph $G'$ be adding in edges between two distince vertices with distance less than or equal to $d$. 
 
-If $d \geq 2$ then we create a new graph $G'$ be adding in edges between two vertices who have a distance less than or equal to $k$. Then any two vertices which do not share an edge in $G'$ must be of distance $d+1$ or greater apart. Notice that the time complexity of adding the new edges is at most $O(n \times n^d) = O(n^{d+1})$ since for each vertex, a search for vertices of distance less or equal to than $d$ can branch no more than $n-1 \leq n$ times, to a depth of no more than $d$. As any independent set in $G'$ is thus a $d$-packing in $G$ then transforming $G$ to $G'$ and then running Wahlstr\"{o}m's \#\textsc{Independent Set} counts the number of $d$-packings in time $O(n^{d+1}) + O^*(1.2377^n) = O^*(1.2377^n)$ as $d$ is fixed. Since the extra computation to transform $G$ to $G'$ requires only $O(n^{d+1})$ time then at most it requires polynomial space. As \#\textsc{Independent Set} is a polynomial space branching algorithm then to solve for the case $d \geq 2$ we also have a polynomial space branching algorithm.
+Then any two distinct vertices which are not adjacent $G'$ must be of distance $d+1$ or greater apart. 
 
-The above is summarized in the polynomial space branching algorithm \ref{algo:num_packing}.
+Notice that the time complexity of adding the new edges is at most $O(n \times n^d) = O(n^{d+1})$ since for each vertex, a search for vertices of distance less or equal to than $d$ can branch no more than $n-1 \leq n$ times, to a depth of no more than $d$. As any independent set in $G'$ is thus a $d$-packing in $G$ then transforming $G$ to $G'$ and then running Wahlstr\"{o}m's \#\textsc{Independent Set} counts the number of $d$-packings in time $O(n^{d+1}) + O^*(1.2377^n) = O^*(1.2377^n)$ as $d$ is fixed. Since the extra computation to transform $G$ to $G'$ requires only $O(n^{d+1})$ time then at most it requires polynomial space. As \#\textsc{Independent Set} is a polynomial space branching algorithm then to solve for the case $d \geq 2$ we also have a polynomial space branching algorithm.
+
+We denote the above polynomial space branching algorithm as \texttt{\#Packing} and summarize it in \cref{algo:num_packing}.
 
 \begin{algorithm}[H]
 \caption{\texttt{\#Packing}}          % give the algorithm a caption
@@ -256,7 +259,13 @@ in $\mcO^*(2^n)$ time and space. We can decide whether $G$ has a $D$-packing col
 
 \section{\sc Packing Colouring (\textnormal{Polynomial space})}
 
-We make use of the algorithm from (1) (based on the algorithm by \cite{Wahlstr2008,Dahllof2005}) that counts the number of $d$-packings in a given graph $G$ and integer $d \ge 0$ in $\mcO^*(1.2377^n)$ time and polynomial space. Then, we obtain a polynomial space algorithm for \textsc{Packing Coloring} with running time
+We incorporate the algorithm \texttt{\#Packing} from (1) that counts the number of $d$-packings in a given graph $G$ and integer $d \ge 0$ in $\mcO^*(1.2377^n)$ time and polynomial space to modify \cref{eq:incl_excl_final} to be
+\begin{equation*}
+	\left | \bigcap_{v \in V} A_v \right | 
+	= \sum_{S \subseteq V} (-1)^{|S|} \prod_{i=1}^{k} \texttt{\#Packing}(V \setminus S, d_i)
+\end{equation*}
+
+Then, we obtain a polynomial space algorithm for \textsc{Packing Coloring} with running time
 \begin{equation*}
 	\sum_{S\subseteq V} \mcO^*(1.2377^{n-|S|}) = \sum_{s=0}^n \binom{n}{s} \mcO^*(1.2377^{n-s}) = \mcO^*(2.2377^n)
 \end{equation*}
