@@ -182,15 +182,13 @@ Consider a graph $G = (V, E)$ and let $n = |V|$.
 First note that in any graph, the distance between any two distinct vertices is at least 1. Therefore, any subset of vertices $S \subseteq V$ is a $0$-packing, of which there are $2^n$. So for $d=0$, we need only calculate $|V|$ and $2^{|V|}$, which can be done in \todo{Why was your previous bound so pessimistic? $n^{\mcO(1)}$}
  $\mcO(n)$ time and space.
 
-Next observe that in an independent set, the distance between any two distinct vertices is at least 2. Therefore, any independent set of $G$ is a $1$-packing. Denote \texttt{\#Indep-set} the polynomial space and $\mcO^*(1.2377^n)$ time branching algorithm of Wahlstr\"{o}m \cite{Dahllof2005,Wahlstr2008} that counts the number of independent sets in any graph. Then for $d=1$, we simply run \texttt{\#Indep-set} on $G$ and obtain a polynomial space branching algorithm by virtue of the fact that \texttt{\#Indep-set} is a polynomial space branching algorithm.
+Next observe that in an independent set, the distance between any two distinct vertices is at least 2. Therefore, any independent set of $G$ is a $1$-packing. Denote \texttt{\#Indep-set} the polynomial space and $\mcO^*(1.2377^n)$ time branching algorithm of Wahlstr\"{o}m \cite{Dahllof2005,Wahlstr2008} that counts the number of independent sets in any graph. Then for $d=1$, we simply run \texttt{\#Indep-set} on $G$ using polynomial space, by virtue of the fact that \texttt{\#Indep-set} is a polynomial space branching algorithm.
 
-For $d \geq 2$ we create a new graph $G'$ be adding in edges between two distince vertices with distance less than or equal to $d$. 
+For $d \geq 2$, we create a new graph $G'$ by adding edges between all pairs of distinct vertices that are of distance less than $d+1$ apart. Then for any pair of distinct vertices that are not adjacent in $G'$, the distance between them in $G$ must be at least $d+1$. It immediately follows that a subset of vertices is an independent set of $G'$ if and only if it is a $d$-packing of $G$.
 
-Then any two distinct vertices which are not adjacent $G'$ must be of distance $d+1$ or greater apart. 
+We compute the graph $G'$ in polynomial time and space by performing a depth-limited search (limited in $d+1$) for pairs of vertices of distance less than $d+1$ apart and inserting new edges between them. We then run \texttt{\#Indep-set} on $G'$ and output its result. Since we have a polynomial time and space reduction and a polynomial space and $\mcO^*(1.2377^n)$ time branching algorithm which solves our reduced instance, we also have a polynomial space and $\mcO^*(1.2377^n)$ time branching algorithm in this case.
 
-Notice that the time complexity of adding the new edges is at most $O(n \times n^d) = O(n^{d+1})$ since for each vertex, a search for vertices of distance less or equal to than $d$ can branch no more than $n-1 \leq n$ times, to a depth of no more than $d$. As any independent set in $G'$ is thus a $d$-packing in $G$ then transforming $G$ to $G'$ and then running Wahlstr\"{o}m's \#\textsc{Independent Set} counts the number of $d$-packings in time $O(n^{d+1}) + O^*(1.2377^n) = O^*(1.2377^n)$ as $d$ is fixed. Since the extra computation to transform $G$ to $G'$ requires only $O(n^{d+1})$ time then at most it requires polynomial space. As \#\textsc{Independent Set} is a polynomial space branching algorithm then to solve for the case $d \geq 2$ we also have a polynomial space branching algorithm.
-
-We denote the above polynomial space branching algorithm as \texttt{\#Packing} and summarize it in \cref{algo:num_packing}.
+We summarize the above in \cref{algo:num_packing} and denote it as \texttt{\#Packing}.
 
 \begin{algorithm}[H]
 \caption{\texttt{\#Packing}}          % give the algorithm a caption
@@ -208,13 +206,13 @@ We denote the above polynomial space branching algorithm as \texttt{\#Packing} a
 	\textbf{return} \texttt{\#Indep-set}($G$)
 }
 \If{$d \geq 2$}{
-	Create a new graph $G' = (V,E')$ where $E' = E \cup E^*$ and $uv \in E^*$ if $d(u,v) \leq k$ in $G$.\n
+	Let $G' = (V,E')$ where $E' = E \cup E^*$ and $E^* = \{ uv : d_G(u,v) \leq d \}$\n
 	\textbf{return} \texttt{\#Indep-set}($G'$)
 }
 
 \end{algorithm}
 
-Therefore, \dots
+Finally, we see that in all cases (i.e. for all $d \ge 0$), \texttt{\#Packing} runs in polynomial space and $\mcO^*(1.2377^n)$ time.
 
 \section{\sc Packing Colouring  (\textnormal{Exponential space})}
 
@@ -282,9 +280,23 @@ From (1) we can reduce \textsc{Packing} to \textsc{Independent set} in poly-time
 
 \todo{Formalize and Proofread}
 
-Reduction to \textsc{Independent Set}. For $d$ odd, add in $d-1/2$ new vertices between each edge and run $d$-\textsc{Packing}. Map intermediate vertices back to closest ``original'' vertices if selected. This is a solution to $d=1$ packing, and hence independent set (since they are the same). Notice that we may match an added vertex with another added vertex, but it will preserve the fact that we get a YES case after the reduction if prior to it, it was a YES case.
+We show that the $d$-\textsc{Packing} problem is $W[1]$-hard for parameter $k$ by providing a parameterized reduction from a well-known $W[1]$-hard problem, namely, \textsc{Independent Set}.	
 
-For $d = 2k$ even, add in $d/2$ new vertices on paths between any two original vertices. Then for each of these added vertices, add in a path of length $d-1 = 2k-1$ between add ADDED vertices. Now, notice that between any two original vertices which were adjacent, they are of distance $d/2 + 1$, but if they were not neighbors, they are now of distance $d-1 + 2 = d+1$ apart. It can be left an an exercise to the read to prove that this is correct.
+In other words, given any instance $(G=(V,E), k)$ of \textsc{Independent Set}, we describe an FPT algorithm that contructs an equivalent instance $(G'=(V',E'), k')$ of $d$-\textsc{Packing}.
+
+First, set $k' \leftarrow k$. For odd $d=2m+1 \ge 1$ where $m$ is some natural number, we replace the edge between all pairs of distinct vertices $(u, v)$ by a path graph on $m$ vertices ($P_m$) by connecting each respective endpoint of the path graph to a vertex $u, v$. In other words, we add $m$ vertices between each pair $(u, v)$ of adjacent vertices $w_1, w_2, \dotsc, w_m \in V'$, remove the original edge $uv$, and add edges $uw_1, w_1w_2, \dotsc, w_mv \in E'$.
+
+For even $d=2m$, \dots
+
+Now we show that $(G, k)$ is a \textsc{Yes}-instance for \textsc{Independent Set} iff $(G', k')$ is a \textsc{Yes}-instance for $d$-\textsc{Packing}:
+
+The reduction is clearly FPT (even polynomial) since $k' \leq k$ and the running time of the reduction is $f(k) \cdot |I|^{\mcO(1)} = n^{\mcO(1)}$ since $f(k)=c$ and $|I| = n$.
+
+Since there is a parameterized reduction from \textsc{Independent Set}, the $d$-\textsc{Packing} problem is $W[1]$-hard for parameter $k$. 
+
+% Reduction to \textsc{Independent Set}. For $d$ odd, add in $d-1/2$ new vertices between each edge and run $d$-\textsc{Packing}. Map intermediate vertices back to closest ``original'' vertices if selected. This is a solution to $d=1$ packing, and hence independent set (since they are the same). Notice that we may match an added vertex with another added vertex, but it will preserve the fact that we get a YES case after the reduction if prior to it, it was a YES case.
+
+% For $d = 2k$ even, add in $d/2$ new vertices on paths between any two original vertices. Then for each of these added vertices, add in a path of length $d-1 = 2k-1$ between add ADDED vertices. Now, notice that between any two original vertices which were adjacent, they are of distance $d/2 + 1$, but if they were not neighbors, they are now of distance $d-1 + 2 = d+1$ apart. It can be left an an exercise to the read to prove that this is correct.
 
 \section{\sc Packing \textnormal{is FPT for parameter $d + tw(G)$}}
 
