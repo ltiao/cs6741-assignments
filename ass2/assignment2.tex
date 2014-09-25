@@ -290,6 +290,11 @@ For even $d=2m$, \dots
 
 Now we show that $(G, k)$ is a \textsc{Yes}-instance for \textsc{Independent Set} iff $(G', k')$ is a \textsc{Yes}-instance for $d$-\textsc{Packing}:
 
+\begin{itemize}
+	\item ($\Rightarrow$)
+	\item ($\Leftarrow$) 
+\end{itemize}
+
 The reduction is clearly FPT (even polynomial) since $k' \leq k$ and the running time of the reduction is $f(k) \cdot |I|^{\mcO(1)} = n^{\mcO(1)}$ since $f(k)=c$ and $|I| = n$.
 
 Since there is a parameterized reduction from \textsc{Independent Set}, the $d$-\textsc{Packing} problem is $W[1]$-hard for parameter $k$. 
