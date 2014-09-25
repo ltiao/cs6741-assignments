@@ -124,12 +124,12 @@
 \begin{document}
 \maketitle
 
-\todo{Consistency between British and American spelling (i.e. colour vs. color)}
+\todo{Consistency between British and American spelling (i.e. colour vs. color) Edward: Let's go with American? Serge's questions use color}
 \todo{Spellcheck}
 
 \section*{Preliminaries}
 
-For completeness and later reference, we restate the \textsc{Packing}, $d$-\textsc{Packing}, \#\textsc{Packing} and \textsc{Packing Colouring} problems presented in this assignment.
+For completeness and later reference, we restate the \textsc{Packing}, $d$-\textsc{Packing}, \#\textsc{Packing} and \textsc{Packing Coloring} problems presented in this assignment.
 
 For an integer $d \geq 0$, a \emph{d-packing} in a graph $G = (V,E)$ is a subset of vertices $S \subseteq V$ such that the distance between any two vertices in $S$ is at least $d$ + 1 in $G$. Denote $d(u,v)$ as the distance between $u,v \in V$.
 
@@ -161,13 +161,13 @@ The counting variant requires the output of the number of $d$-packings in $G$
 \end{tabular}	
 \end{algorithm}
 
-For a sequence of $k$ non-negative integers $D = (d_1,...,d_k)$, a \emph{D-packing colouring} of a graph $G = (V,E)$ is a partition of the vertex set $V$ into $k$ disjoint sets of vertices, $(S_1,...,S_k)$, such that $S_i$ is a $d_i$-packing in $G$ for each $i \in \{1,...,k\}$. The \textsc{Packing Colouring} problem is defined below
+For a sequence of $k$ non-negative integers $D = (d_1,...,d_k)$, a \emph{D-packing coloring} of a graph $G = (V,E)$ is a partition of the vertex set $V$ into $k$ disjoint sets of vertices, $(S_1,...,S_k)$, such that $S_i$ is a $d_i$-packing in $G$ for each $i \in \{1,...,k\}$. The \textsc{Packing Coloring} problem is defined below
 
 \begin{algorithm}[H]
-\textsc{Packing Colouring\n}
+\textsc{Packing Coloring\n}
 \begin{tabular}{l l}
  Input:    & A graph $G$, an integer $k \geq 1$, and a sequence of non-negative integers $D = (d_1,...,d_k)$ \n
- Question: & Does $G$ have a $D$-packing colouring? \n
+ Question: & Does $G$ have a $D$-packing coloring? \n
 \end{tabular}	
 \end{algorithm}
 
@@ -179,7 +179,7 @@ For a sequence of $k$ non-negative integers $D = (d_1,...,d_k)$, a \emph{D-packi
 
 Consider a graph $G = (V, E)$ and let $n = |V|$.
 
-First note that in any graph, the distance between any two distinct vertices is at least 1. Therefore, any subset of vertices $S \subseteq V$ is a $0$-packing, of which there are $2^n$. So for $d=0$, we need only calculate $|V|$ and $2^{|V|}$, which can be done in \todo{Why was your previous bound so pessimistic? $n^{\mcO(1)}$}
+First note that in any graph, the distance between any two distinct vertices is at least 1. Therefore, any subset of vertices $S \subseteq V$ is a $0$-packing, of which there are $2^n$. So for $d=0$, we need only calculate $|V|$ and $2^{|V|}$, which can be done in \todo{Why was your previous bound so pessimistic? Edward: No reason, I just wanted to cover bases. Linear is fine. $n^{\mcO(1)}$}
  $\mcO(n)$ time and space.
 
 Next observe that in an independent set, the distance between any two distinct vertices is at least 2. Therefore, any independent set of $G$ is a $1$-packing. Denote \texttt{\#Indep-set} the polynomial space and $\mcO^*(1.2377^n)$ time branching algorithm of Wahlstr\"{o}m \cite{Dahllof2005,Wahlstr2008} that counts the number of independent sets in any graph. Then for $d=1$, we simply run \texttt{\#Indep-set} on $G$ using polynomial space, by virtue of the fact that \texttt{\#Indep-set} is a polynomial space branching algorithm.
@@ -214,7 +214,7 @@ We summarize the above in \cref{algo:num_packing} and denote it as \texttt{\#Pac
 
 Finally, we see that in all cases (i.e. for all $d \ge 0$), \texttt{\#Packing} runs in polynomial space and $\mcO^*(1.2377^n)$ time.
 
-\section{\sc Packing Colouring  (\textnormal{Exponential space})}
+\section{\sc Packing Coloring  (\textnormal{Exponential space})}
 
 First note that a $k$-coloring of a graph is a special case of a $D$-packing coloring 
 where $D = (d_1, d_2, \dotsc, d_k) = (1, 1, \dotsc, 1)$. As such, we can consider extending
@@ -255,7 +255,7 @@ Finally, we evaluate
 
 in $\mcO^*(2^n)$ time and space. We can decide whether $G$ has a $D$-packing coloring by checking that $G$ has at least one $D$-packing coloring ($\left | \bigcap_{v \in V} A_v \right | > 0$). Therefore, \textsc{Packing Coloring} can be solved in $\mcO^*(2^n)$ time and space.
 
-\section{\sc Packing Colouring (\textnormal{Polynomial space})}
+\section{\sc Packing Coloring (\textnormal{Polynomial space})}
 
 We incorporate the algorithm \texttt{\#Packing} from (1) that counts the number of $d$-packings in a given graph $G$ and integer $d \ge 0$ in $\mcO^*(1.2377^n)$ time and polynomial space to modify \cref{eq:incl_excl_final} to be
 \begin{equation*}
