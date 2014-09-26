@@ -286,12 +286,12 @@ In other words, given any instance $(G=(V,E), k)$ of \textsc{Independent Set}, w
 
 First, set $k' \leftarrow k$. For odd $d=2m+1 \ge 1$ where $m$ is some natural number, we replace the edge between all pairs of distinct vertices $(u, v)$ by a path graph on $m$ vertices ($P_m$) by connecting each respective endpoint of the path graph to a vertex $u, v$. In other words, we add $m$ vertices between each pair $(u, v)$ of adjacent vertices $w_1, w_2, \dotsc, w_m \in V'$, remove the original edge $uv$, and add edges $uw_1, w_1w_2, \dotsc, w_mv \in E'$.
 
-For even $d=2m$, \dots
+For even $d=2m$, as before we first add $m$ new vertices $w_1, w_2, \dotsc, w_m$ on each path between any two originaly adjacent vertices $(u, v)$. Suppose there were $q$ edges originally and we name the added vertices sets $\{w_{11}, w_{12}, \dotsc, w_{1m}\},$ $\{w_{21}, w_{22}, \dotsc, w_{2m}\}, \dotsc, \{w_{q1}, w_{q2}, \dotsc, w_{qm}\} \subseteq E'$. Then for each pair of these added vertices which do not lie on a same path, we add in a path of length $d-1 = 2m-1$ between such pair of vertices. In other words, we add $d-1 = 2m-1$ vertices between $w_{i\alpha}$ and $w_{j\beta}$ where $i\ne j$.
 
 Now we show that $(G, k)$ is a \textsc{Yes}-instance for \textsc{Independent Set} iff $(G', k')$ is a \textsc{Yes}-instance for $d$-\textsc{Packing}:
 
 \begin{itemize}
-	\item ($\Rightarrow$)
+	\item ($\Rightarrow$) Let $S$ be an independent set of size $k$ in $G$. Then, in odd-$d$ case, the distance between two vertices of $S$ in $G'$ is at least $m+1+m+1=d+1$, whereas in even-$d$ case, if two vertices were originally not neighbours, they are now of distance $d-1 + 2 = d+1$ apart. Hence, $S$ is a $d$-\textsc{Packing} of $G'$ since the distance between any pair of the vertices of $S$ in $G'$ is at least $d+1$.
 	\item ($\Leftarrow$) 
 \end{itemize}
 
