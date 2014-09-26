@@ -315,6 +315,8 @@ We formalize the property of a graph having a $d$-packing of size $k$ in Monadic
 
 \todo{Discussion: Set cardinality is technically not a part of MSOL. Of course we can define it, but the length of the formula is $\mcO(k^2)$.}
 
+\cite{Arnborg1991}
+
 By Courcelle's Theorem, deciding whether a graph satisfies the properties defined by a MSOL formula is FPT, parameterized by the treewidth of $G$ and the length of the formula, which in our case is $\mcO(d)$.
 
 Therefore, it immediately follows that \textsc{Packing} is FPT for parameter $d+tw(G)$ where $tw(G)$ denotes the treewidth of $G$.
