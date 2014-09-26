@@ -1,4 +1,4 @@
-\documentclass[10pt, a4paper]{article}
+\documentclass[12pt, a4paper]{article}
 \usepackage{amsmath}
 \usepackage{amssymb}
 \usepackage{amsthm}
@@ -286,7 +286,9 @@ In other words, given any instance $(G=(V,E), k)$ of \textsc{Independent Set}, w
 
 First, set $k' \leftarrow k$. For odd $d=2m+1 \ge 1$ where $m$ is some natural number, we replace the edge between all pairs of distinct vertices $(u, v)$ by a path graph on $m$ vertices ($P_m$) by connecting each respective endpoint of the path graph to a vertex $u, v$. In other words, we add $m$ vertices $w_1, w_2, \dotsc, w_m \in V'$ for each pair $(u, v)$ of adjacent vertices, remove the original edge $uv$, and add edges $uw_1, w_1w_2, \dotsc, w_mv \in E'$.
 
-For even $d=2m$, we first add $m$ vertices for all pairs of adjacent vertices as before. For edge $i$ denote its added vertices $V_{i} = \{w_{i1}, w_{i2}, \dotsc, w_{im}\}$ for $i \in \{1, 2, \dotsc, |E|\}$ and let $V' = V \cup V^{*}$ where $V^{*} = \bigcup_{i=1}^{|E|} V_i$. Then for each pair of vertices $(u, v) \in V_i \times V_j$ where $i \ne j$, we add a path graph on $2m-1 = d-1$ vertices. In other words, we add a path with $d-1$ vertices between vertices $w_{ip}$ and $w_{jq}$ where $i\ne j$.
+For even $d=2m$, we first add $m$ vertices for all pairs of adjacent vertices as before. For edge $i$ denote its added vertices $V_{i} = \{w_{i1}, w_{i2}, \dotsc, w_{im}\}$ for $i \in \{1, 2, \dotsc, |E|\}$ and let $V' = V \cup V^{*}$ where $V^{*} = \bigcup_{i=1}^{|E|} V_i$. Then for each pair of vertices $(u, v) \in V_i \times V_j$ where $i \ne j$, we add a path graph on $2m-2 = d-2$ vertices. In other words, we add a path with $d-2$ vertices between vertices $w_{ip}$ and $w_{jq}$ where $i\ne j$, and hence a path of length $d-1$. Let us call the vertices added between pairs of adjacent vertices in $G$ (where we added $m$ vertices) the First Addition, and the vertices added between all pairs of First Addition vertices (in the new $d-1$ vertices) the Second Addition.
+
+To help aid our proof, we make the assumption that both $G'$ and $G$ do not contain isolated vertices. This case can easily be taken care of since if in $(G,k)$, $x$ is an isolated vertex then both \textsc{Packing} and \textsc{Independent Set} have the same simplification of $(G\bs\{x\},k-1)$.
 
 Now we show that $(G, k)$ is a \textsc{Yes}-instance for \textsc{Independent Set} iff $(G', k')$ is a \textsc{Yes}-instance for $d$-\textsc{Packing}:
 
@@ -294,7 +296,14 @@ Now we show that $(G, k)$ is a \textsc{Yes}-instance for \textsc{Independent Set
 	\item ($\Rightarrow$) Let $S$ be an independent set of size $k$ in $G$. Then, for odd $d$, the distance between any two distinct vertices $(u, v)$ in $S$ in $G'$ is at least $2(m+1)=d+1$ since $uv \notin E$. So if there was one vertex on a path between $u, v$ in $G$, then there are now $d+1$ vertices on a path between them in $G'$. Therefore, $S$ is a $d$-packing of size $k'$ in $G'$ for some odd $d$. For even $d$, \dots
 
 	% For even $d$,  if two vertices were originally not neighbours, they are now of distance $d-1 + 2 = d+1$ apart. Hence, $S$ is a $d$-\textsc{Packing} of $G'$ since the distance between any pair of the vertices of $S$ in $G'$ is at least $d+1$.
-	\item ($\Leftarrow$) \dots
+	\item ($\Leftarrow$) Let us first consider the even case for $d = 2m$. Suppose $S$ is a $d-$packing of size $k'$ in $G'$. For any two arbitrary vertices $u,v$ we consider in what cases they can both belong to $S$
+	\begin{enumerate}
+		\item $u,v \in V$: The two vertices are from the original graph $G$. If $u$ and $v$ were adjacent to each other in $G$ then notice that the distance from $u$ to $v$ is now $m+1 < 2m+1$ since we added replaced edges with $m$ vertices on a path. In other words, both $u,v$ cannot be in $S$ if they were previously adjacent
+		\item $u \in V$, $v \in$ First Addition: $u$ belongs to a vertex in $G$ and $v$ is one of the $m$ vertices added in the First Addition. Due to the vertices of the Second Addition, there is a path from $v$ to any $v' \in$ First Addition of path length $d-1$. Let $v'$ be a First Addition vertex adjacent to $u$. Such a $v'$ must exist due to the assumption that we have no isolated vertices. But that means that there exists a path of length $d-1 + 1$ (from $v$ to $v'$ to $u$) between $u,v$ hence both $u,v$ cannot be in $S$.
+		\item $u \in V$, $v \in $ Second Addition: This works a similar manner to above. There must exist a vertex $v' \in $ First Addition such that $u, v'$ are adjacent. $v$ and $v'$ are at most $d-2 / 2 < d - 1$ distance away. The addition of these two paths will not result in a path greater than $d$ hence once again, both $u,v$ cannot be in $S$
+		\item $u,v \in$ First Addition: By the addition of the $d-1$ length path by Second Addition, this case cannot occur.
+		\item $u \in$ First Addition, $v \in$ Second Addition.
+	\end{enumerate}
 \end{itemize}
 
 The reduction is clearly FPT (even polynomial) since $k' \leq k$ and the running time of the reduction is $f(k) \cdot |I|^{\mcO(1)} = n^{\mcO(1)}$ since $f(k)=c$ and $|I| = n$.
