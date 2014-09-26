@@ -310,7 +310,7 @@ We formalize the property of a graph having a $d$-packing of size $k$ in Monadic
 								&\qquad \left. \wedge (adj(v_0, v_1) \wedge adj(v_1, v_2) 
 									\wedge \dots \wedge adj(v_{d-1}, v_d)) \right ] \\
 	\mathrm{isPacking}(X, d)	&\coloneqq \neg \left [\exists u \in X, \exists v \in X (\mathrm{path}(u, v, 1) 
-									\vee \mathrm{path}(u, v, 2) \vee \dots \vee \mathrm{path}(u, v, d) ) \right ] \\
+									\vee \mathrm{path}(u, v, 2) \vee \dots \vee \mathrm{path}(u, v, d) ) \right ]
 \end{align*}
 
 In Arnborg et al.'s \cite{Arnborg1991} extension of Courcelle's Theorem gives us an FPT algorithm which takes as an input a graph $G$ and a Monadic Second Order sentence $F(X)$ and computes a minimize size set of vertices $X$ such that $F(X)$ is true in $G$. Here the parameter used to calculate the parameterized complexity is $|F(X)| + tw(G)$. 
