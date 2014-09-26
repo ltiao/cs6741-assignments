@@ -313,18 +313,15 @@ We formalize the property of a graph having a $d$-packing of size $k$ in Monadic
 									\vee \mathrm{path}(u, v, 2) \vee \dots \vee \mathrm{path}(u, v, d) ) \right ] \\
 \end{align*}
 
-In Arnborg et al.'s\cite{Arnborg1991} extension of Courcelle's Theorem gives us an FPT algorithm which takes as an input a graph $G$ and a Monadic Second Order sentence $F(X)$ and computes a minimize size set of vertices $X$ such that $F(X)$ is true in $G$. Here the parameter used to calculate the parameterized complexity is $|F(X)| + tw(G)$. 
+In Arnborg et al.'s \cite{Arnborg1991} extension of Courcelle's Theorem gives us an FPT algorithm which takes as an input a graph $G$ and a Monadic Second Order sentence $F(X)$ and computes a minimize size set of vertices $X$ such that $F(X)$ is true in $G$. Here the parameter used to calculate the parameterized complexity is $|F(X)| + tw(G)$. 
 
-In \textsc{Packing} we return whether or not a $d-$packing of size $k$ on a graph $G$ with treewidth $tw(G)$ exist. This can be achieved by acquiring $X$, the minimize size of a a $d-$packing in a graph $G$ with treewidth $tw(G)$ by Arnborg et al.'s FPT extension of Courcelle's Theorem. Once this minimum size $d-$packing $X$ is acquired, then a simple check if $|X| \leq k$ will ensure that a $d$-packing of size $k$ exists for $G$. If $|X| > k$ then $G$ does not have a $k$ sized $d-$packing.
+In \textsc{Packing} we return whether or not a $d-$packing of size $k$ on a graph $G$ with treewidth $tw(G)$ exist. This can be achieved by acquiring $X$, the minimize size of a a $d-$packing in a graph $G$ with treewidth $tw(G)$ by Arnborg's FPT extension of Courcelle's Theorem using the MSOL sentence isPacking$(G,d)$. Once this minimum size $d-$packing $X$ is acquired, then a simple check if $|X| \leq k$ will ensure that a $d$-packing of size $k$ exists for $G$. If $|X| > k$ then $G$ does not have a $k$ sized $d-$packing.
 
 % \todo{Discussion: Set cardinality is technically not a part of MSOL. Of course we can define it, but the length of the formula is $\mcO(k^2)$.}
 
 % By Courcelle's Theorem, deciding whether a graph satisfies the properties defined by a MSOL formula is FPT, parameterized by the treewidth of $G$ and the length of the formula, which in our case is $\mcO(d)$.
 
-% By Courcelle's Theorem, deciding whether a graph satisfies the properties defined by a MSOL formula is FPT, parameterized by the treewidth of $G$ and the length of the formula, which in our case is $\mcO(d)$.
-% >>>>>>> 71d2f7e56447a587aae904a649d389be615529ff
-
-Therefore, it immediately follows that \textsc{Packing} is FPT for parameter $d+tw(G)$ where $tw(G)$ denotes the treewidth of $G$.
+The usage of Arnborg's FPT extension of Courcelle's theorem with the MSOL sentence isPacking$(G,d)$ guarantees that finding a minimum size graph $X$ satisfying isPacking$(G,d)$ is FPT, parameterized by $tw(G) + |$isPacking$(G,d)| = tw(G) + d$. As checking if $|X| \leq k$ is a constant time operation therefore it immediately follows that \textsc{Packing} is FPT for parameter $d+tw(G)$ where $tw(G)$ denotes the treewidth of $G$.
 
 \bibliographystyle{plain}
 \bibliography{asst2}
