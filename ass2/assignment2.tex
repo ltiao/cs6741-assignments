@@ -286,12 +286,14 @@ In other words, given any instance $(G=(V,E), k)$ of \textsc{Independent Set}, w
 
 First, set $k' \leftarrow k$. For odd $d=2m+1 \ge 1$ where $m$ is some natural number, we replace the edge between all pairs of distinct vertices $(u, v)$ by a path graph on $m$ vertices ($P_m$) by connecting each respective endpoint of the path graph to a vertex $u, v$. In other words, we add $m$ vertices $w_1, w_2, \dotsc, w_m \in V'$ for each pair $(u, v)$ of adjacent vertices, remove the original edge $uv$, and add edges $uw_1, w_1w_2, \dotsc, w_mv \in E'$.
 
-For even $d=2m$, as before we first add $m$ vertices and $m+1$ edges for all pairs of adjacent vertices. For edge $i$ denote its added vertices $V_{i} = \{w_{i1}, w_{i2}, \dotsc, w_{im}\}$ for $i \in \{1, 2, \dotsc, |E|\}$ and let $V^{*} = \bigcup_{i=1}^{|E|} V_i$. Then for each pair of vertices $u, v \in V^{*}$ such that $u \in V_i, v \in V_j$ where $i \ne j$, we add a path graph on $2m-1 = d-1$ vertices. In other words, we add a path with $d-1$ vertices between vertices $w_{ip}$ and $w_{jq}$ where $i\ne j$.
+For even $d=2m$, we first add $m$ vertices for all pairs of adjacent vertices as before. For edge $i$ denote its added vertices $V_{i} = \{w_{i1}, w_{i2}, \dotsc, w_{im}\}$ for $i \in \{1, 2, \dotsc, |E|\}$ and let $V^{*} = \bigcup_{i=1}^{|E|} V_i, V' = V \cup V^{*}$. Then for each pair of vertices $(u, v) \in V_i \times V_j$ where $i \ne j$, we add a path graph on $2m-1 = d-1$ vertices. In other words, we add a path with $d-1$ vertices between vertices $w_{ip}$ and $w_{jq}$ where $i\ne j$.
 
 Now we show that $(G, k)$ is a \textsc{Yes}-instance for \textsc{Independent Set} iff $(G', k')$ is a \textsc{Yes}-instance for $d$-\textsc{Packing}:
 
 \begin{itemize}
-	\item ($\Rightarrow$) Let $S$ be an independent set of size $k$ in $G$. Then, in odd-$d$ case, the distance between two vertices of $S$ in $G'$ is at least $m+1+m+1=d+1$, whereas in even-$d$ case, if two vertices were originally not neighbours, they are now of distance $d-1 + 2 = d+1$ apart. Hence, $S$ is a $d$-\textsc{Packing} of $G'$ since the distance between any pair of the vertices of $S$ in $G'$ is at least $d+1$.
+	\item ($\Rightarrow$) Let $S$ be an independent set of size $k$ in $G$. Then, for odd $d$, the distance between any two distinct vertices in $S$ in $G'$ is at least $2(m+1)=d+1$ since 
+
+	, whereas in even-$d$ case, if two vertices were originally not neighbours, they are now of distance $d-1 + 2 = d+1$ apart. Hence, $S$ is a $d$-\textsc{Packing} of $G'$ since the distance between any pair of the vertices of $S$ in $G'$ is at least $d+1$.
 	\item ($\Leftarrow$) 
 \end{itemize}
 
