@@ -286,22 +286,20 @@ In other words, given any instance $(G=(V,E), k)$ of \textsc{Independent Set}, w
 
 First, set $k' \leftarrow k$. For odd $d=2m+1 \ge 1$ where $m$ is some natural number, we replace the edge between all pairs of distinct vertices $(u, v)$ by a path graph on $m$ vertices ($P_m$) by connecting each respective endpoint of the path graph to a vertex $u, v$. In other words, we add $m$ vertices $w_1, w_2, \dotsc, w_m \in V'$ for each pair $(u, v)$ of adjacent vertices, remove the original edge $uv$, and add edges $uw_1, w_1w_2, \dotsc, w_mv \in E'$.
 
-For even $d=2m$, as before we first add $m$ vertices and $m+1$ edges for all pairs of adjacent vertices. For edge $i$ denote its added vertices $V_{i} = \{w_{i1}, w_{i2}, \dotsc, w_{im}\}$ for $i \in \{1, 2, \dotsc, |E|\}$ and let $V^{*} = \bigcup_{i=1}^{|E|} V_i$. Then for each pair of vertices $u, v \in V^{*}$ such that $u \in V_i, v \in V_j$ where $i \ne j$, we add a path graph on $2m-1 = d-1$ vertices. In other words, we add a path with $d-1$ vertices between vertices $w_{ip}$ and $w_{jq}$ where $i\ne j$.
+For even $d=2m$, we first add $m$ vertices for all pairs of adjacent vertices as before. For edge $i$ denote its added vertices $V_{i} = \{w_{i1}, w_{i2}, \dotsc, w_{im}\}$ for $i \in \{1, 2, \dotsc, |E|\}$ and let $V' = V \cup V^{*}$ where $V^{*} = \bigcup_{i=1}^{|E|} V_i$. Then for each pair of vertices $(u, v) \in V_i \times V_j$ where $i \ne j$, we add a path graph on $2m-1 = d-1$ vertices. In other words, we add a path with $d-1$ vertices between vertices $w_{ip}$ and $w_{jq}$ where $i\ne j$.
 
 Now we show that $(G, k)$ is a \textsc{Yes}-instance for \textsc{Independent Set} iff $(G', k')$ is a \textsc{Yes}-instance for $d$-\textsc{Packing}:
 
 \begin{itemize}
-	\item ($\Rightarrow$) Let $S$ be an independent set of size $k$ in $G$. Then, in odd-$d$ case, the distance between two vertices of $S$ in $G'$ is at least $m+1+m+1=d+1$, whereas in even-$d$ case, if two vertices were originally not neighbours, they are now of distance $d-1 + 2 = d+1$ apart. Hence, $S$ is a $d$-\textsc{Packing} of $G'$ since the distance between any pair of the vertices of $S$ in $G'$ is at least $d+1$.
-	\item ($\Leftarrow$) 
+	\item ($\Rightarrow$) Let $S$ be an independent set of size $k$ in $G$. Then, for odd $d$, the distance between any two distinct vertices $(u, v)$ in $S$ in $G'$ is at least $2(m+1)=d+1$ since $uv \notin E$. So if there was one vertex on a path between $u, v$ in $G$, then there are now $d+1$ vertices on a path between them in $G'$. Therefore, $S$ is a $d$-packing of size $k'$ in $G'$ for some odd $d$. For even $d$, \dots
+
+	% For even $d$,  if two vertices were originally not neighbours, they are now of distance $d-1 + 2 = d+1$ apart. Hence, $S$ is a $d$-\textsc{Packing} of $G'$ since the distance between any pair of the vertices of $S$ in $G'$ is at least $d+1$.
+	\item ($\Leftarrow$) \dots
 \end{itemize}
 
 The reduction is clearly FPT (even polynomial) since $k' \leq k$ and the running time of the reduction is $f(k) \cdot |I|^{\mcO(1)} = n^{\mcO(1)}$ since $f(k)=c$ and $|I| = n$.
 
 Since there is a parameterized reduction from \textsc{Independent Set}, the $d$-\textsc{Packing} problem is $W[1]$-hard for parameter $k$. 
-
-% Reduction to \textsc{Independent Set}. For $d$ odd, add in $d-1/2$ new vertices between each edge and run $d$-\textsc{Packing}. Map intermediate vertices back to closest ``original'' vertices if selected. This is a solution to $d=1$ packing, and hence independent set (since they are the same). Notice that we may match an added vertex with another added vertex, but it will preserve the fact that we get a YES case after the reduction if prior to it, it was a YES case.
-
-% For $d = 2k$ even, add in $d/2$ new vertices on paths between any two original vertices. Then for each of these added vertices, add in a path of length $d-1 = 2k-1$ between add ADDED vertices. Now, notice that between any two original vertices which were adjacent, they are of distance $d/2 + 1$, but if they were not neighbors, they are now of distance $d-1 + 2 = d+1$ apart. It can be left an an exercise to the read to prove that this is correct.
 
 \section{\sc Packing \textnormal{is FPT for parameter $d + tw(G)$}}
 
@@ -315,13 +313,16 @@ We formalize the property of a graph having a $d$-packing of size $k$ in Monadic
 									\vee \mathrm{path}(u, v, 2) \vee \dots \vee \mathrm{path}(u, v, d) ) \right ] \\
 \end{align*}
 
-In Arnborg et al.'s extension of Courcelle's Theorem gives us an FPT algorithm which takes as an input a graph $G$ and a Monadic Second Order sentence $F(X)$ and computes a minimize size set of vertices $X$ such that $F(X)$ is true in $G$. Here the parameter used to calculate the parameterized complexity is $|F(X)| + tw(G)$. 
+In Arnborg et al.'s\cite{Arnborg1991} extension of Courcelle's Theorem gives us an FPT algorithm which takes as an input a graph $G$ and a Monadic Second Order sentence $F(X)$ and computes a minimize size set of vertices $X$ such that $F(X)$ is true in $G$. Here the parameter used to calculate the parameterized complexity is $|F(X)| + tw(G)$. 
 
 In \textsc{Packing} we return whether or not a $d-$packing of size $k$ on a graph $G$ with treewidth $tw(G)$ exist. This can be achieved by acquiring $X$, the minimize size of a a $d-$packing in a graph $G$ with treewidth $tw(G)$ by Arnborg et al.'s FPT extension of Courcelle's Theorem. Once this minimum size $d-$packing $X$ is acquired, then a simple check if $|X| \leq k$ will ensure that a $d$-packing of size $k$ exists for $G$. If $|X| > k$ then $G$ does not have a $k$ sized $d-$packing.
 
 % \todo{Discussion: Set cardinality is technically not a part of MSOL. Of course we can define it, but the length of the formula is $\mcO(k^2)$.}
 
 % By Courcelle's Theorem, deciding whether a graph satisfies the properties defined by a MSOL formula is FPT, parameterized by the treewidth of $G$ and the length of the formula, which in our case is $\mcO(d)$.
+
+% By Courcelle's Theorem, deciding whether a graph satisfies the properties defined by a MSOL formula is FPT, parameterized by the treewidth of $G$ and the length of the formula, which in our case is $\mcO(d)$.
+% >>>>>>> 71d2f7e56447a587aae904a649d389be615529ff
 
 Therefore, it immediately follows that \textsc{Packing} is FPT for parameter $d+tw(G)$ where $tw(G)$ denotes the treewidth of $G$.
 
