@@ -527,10 +527,15 @@ This means that any two vertices $u,v \in S'$ must satisfy case 1.
 
 An independent set $S = \{s_1,s_2,...,s_k\}$ is constructed from $S' = \{s_1,s_2,...,s_k\}$, that is to say that a 2-packing on $G'$ corresponds directly to an independent set. This is because we have shown that $S'$ only contains vertices in $V$, the original vertex set of $G$ and the fact that if $u,v$ were in fact adjacent then $d(u,v) = 2$ in $G'$ which contradicts $d(u,v) \geq 3$. Thus $S$ is an independent set for $G$.
 
-Now as we have exhausted all cases, then any \textsc{Yes} instance of \textsc{Independent Set} corresponds to a \textsc{Yes} instance of $d-$\textsc{Packing} for any fixed $d$. Since $k' = k$ then it is upper bounded by the identity function. The running time of the algorithm is polynomial as $d$ is fixed. Hence we have the reduction 
-\[ \text{\textsc{Independent Set}} \leq_{\text{FPT}}\text{$d$-\textsc{Packing}} \] 
-By virtue of the fact that \textsc{Independent Set} is W[1]-hard and there is a FPT reduction to $d$-\textsc{Packing} then $d$-\textsc{Packing} is also W[1]-hard for parameter $k$.
+Now as we have exhausted all cases, then any \textsc{Yes} instance of \textsc{Independent Set} corresponds to a \textsc{Yes} instance of $d-$\textsc{Packing} for any fixed $d$. 
 
+% Since $k' = k$ then it is upper bounded by the identity function. The running time of the algorithm is polynomial as $d$ is fixed. Hence we have the reduction 
+% \[ \text{\textsc{Independent Set}} \leq_{\text{FPT}}\text{$d$-\textsc{Packing}} \] 
+% By virtue of the fact that \textsc{Independent Set} is W[1]-hard and there is a FPT reduction to $d$-\textsc{Packing} then $d$-\textsc{Packing} is also W[1]-hard for parameter $k$.
+
+The reduction is clearly FPT (even polynomial) since $k' \leq k$ and the running time of the reduction is $f(k) \cdot |I|^{\mcO(1)} = n^{\mcO(1)}$ since $f(k)=c$ and $|I| = n$.
+
+Since there is a parameterized reduction from \textsc{Independent Set}, the $d$-\textsc{Packing} problem is $W[1]$-hard for parameter $k$. 
 
 % Now notice that since every vertex is next to a \emph{middle-vertex}, we can let $u'$ and $v'$ be a middle-vertex next to $u,v$ respectively. Now $u' \neq v'$ since otherwise that would mean $d(u,v) = 2$, a contradiction. 
 
@@ -561,9 +566,7 @@ By virtue of the fact that \textsc{Independent Set} is W[1]-hard and there is a 
 % 	\end{enumerate}
 % \end{itemize}
 
-% The reduction is clearly FPT (even polynomial) since $k' \leq k$ and the running time of the reduction is $f(k) \cdot |I|^{\mcO(1)} = n^{\mcO(1)}$ since $f(k)=c$ and $|I| = n$.
 
-% Since there is a parameterized reduction from \textsc{Independent Set}, the $d$-\textsc{Packing} problem is $W[1]$-hard for parameter $k$. 
 
 \section{\sc Packing \textnormal{is FPT for parameter $d + tw(G)$}}
 
