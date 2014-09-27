@@ -1,4 +1,4 @@
-\documentclass[12pt, a4paper]{article}
+\documentclass[10pt, a4paper]{article}
 \usepackage{amsmath}
 \usepackage{amssymb}
 \usepackage{amsthm}
@@ -8,7 +8,7 @@
 \usepackage{enumerate}
 \usepackage{graphicx}
 \usepackage{tikz}
-\usetikzlibrary{automata, positioning}
+\usetikzlibrary{automata, positioning, shapes}
 % \usepackage{pgfplots}
 \usepackage{caption}
 \usepackage{mathtools}
@@ -172,7 +172,7 @@ For a sequence of $k$ non-negative integers $D = (d_1,...,d_k)$, a \emph{D-packi
 
 \section{\#\sc Packing}
 
-\todo{Formalize and Proofread}
+% \todo{Formalize and Proofread}
 
 Consider a graph $G = (V, E)$ and let $n = |V|$.
 
@@ -180,7 +180,7 @@ First note that in any graph, the distance between any two distinct vertices is 
 
 Next observe that in an independent set, the distance between any two distinct vertices is at least 2. Therefore, any independent set of $G$ is a $1$-packing. Denote \texttt{\#Indep-set} the polynomial space and $\mcO^*(1.2377^n)$ time branching algorithm of Wahlstr\"{o}m \cite{Dahllof2005,Wahlstr2008} that counts the number of independent sets in any graph. Then for $d=1$, we simply run \texttt{\#Indep-set} on $G$ using polynomial space, by virtue of the fact that \texttt{\#Indep-set} is a polynomial space branching algorithm.
 
-For $d \geq 2$, we consider the $d$th graph power $G^d$ by adding edges between all pairs of distinct vertices that are of distance distance at most $d$ apart in $G$. Then for any pair of distinct vertices that are not adjacent in $G^d$, the distance between them in $G$ must be at least $d+1$. It immediately follows that a subset of vertices is an independent set of $G^d$ if and only if it is a $d$-packing of $G$.
+For $d \geq 2$, we consider the $d$th power of $G^d$ by adding edges between all pairs of distinct vertices that are of distance distance at most $d$ apart in $G$. Then for any pair of distinct vertices that are not adjacent in $G^d$, the distance between them in $G$ must be at least $d+1$. It immediately follows that a subset of vertices is an independent set of $G^d$ if and only if it is a $d$-packing of $G$.
 
 Let $m=|E|$. Then we compute the graph $G^d$ in time $\mcO(mn)$ and polynomial space by performing a breadth first search starting at each vertex to determine the distances to all other vertices and insert edges where the distance is at most $d$. We then run \texttt{\#Indep-set} on $G^d$ and output its result. Since we have a polynomial time and space reduction and a polynomial space and $\mcO^*(1.2377^n)$ time branching algorithm which solves our reduced instance, we also have a polynomial space and $\mcO^*(1.2377^n)$ time branching algorithm in this case.
 
@@ -208,8 +208,6 @@ We summarize the above in \cref{algo:num_packing} and denote it as \texttt{\#Pac
 \end{algorithm}
 
 Finally, we see that in all cases (i.e. for all $d \ge 0$), \texttt{\#Packing} runs in polynomial space and $\mcO^*(1.2377^n)$ time.
-
-\clearpage
 
 \section{\sc Packing Coloring  (\textnormal{Exponential space})}
 
@@ -305,39 +303,192 @@ so we obtain a running time of $\mcO^{*}(\Delta(G)^{kd})$
 }
 \end{algorithm}
 
+\clearpage
 \section{$d$-\sc Packing \textnormal{is $W[1]$-hard for parameter $k$}}
 
-\todo{Formalize and Proofread}
+% \todo{Formalize and Proofread}
 
 We show that the $d$-\textsc{Packing} problem is $W[1]$-hard for parameter $k$ by providing a parameterized reduction from a well-known $W[1]$-hard problem, namely, \textsc{Independent Set}.	
 
-In other words, given any instance $(G=(V,E), k)$ of \textsc{Independent Set}, we describe an FPT algorithm that contructs an equivalent instance $(G'=(V',E'), k')$ of $d$-\textsc{Packing}.
+\textbf{Construction:} Let $(G = (V,E) ,k)$ be an instance for $\textsc{Independent Set}$. We construct an instance $(G' = (V',E'),k')$ for $d-$\textsc{Packing}. First set $k' \leftarrow k$. 
 
-First, set $k' \leftarrow k$. For odd $d=2m+1 \ge 1$ where $m$ is some natural number, we replace the edge between all pairs of distinct vertices $(u, v)$ by a path graph on $m$ vertices ($P_m$) by connecting each respective endpoint of the path graph to a vertex $u, v$. In other words, we add $m$ vertices $w_1, w_2, \dotsc, w_m \in V'$ for each pair $(u, v)$ of adjacent vertices, remove the original edge $uv$, and add edges $uw_1, w_1w_2, \dotsc, w_mv \in E'$.
+For odd $d = 2m+1$ where $m$ is a natural number, for every vertex $v \in V$ we connect a path graph $(P_m)$ of length $m$ to $v$. In other words we add $m$ vertices $v_1, v_2, ..., v_m \in V'$ and $vv_1, v_1v_2,...,v_{m-1}v_m \in E'$ for every vertex $v$.
 
-For even $d=2m$, we first add $m$ vertices for all pairs of adjacent vertices as before. For edge $i$ denote its added vertices $V_{i} = \{w_{i1}, w_{i2}, \dotsc, w_{im}\}$ for $i \in \{1, 2, \dotsc, |E|\}$ and let $V' = V \cup V^{*}$ where $V^{*} = \bigcup_{i=1}^{|E|} V_i$. Then for each pair of vertices $(u, v) \in V_i \times V_j$ where $i \ne j$, we add a path graph on $2m-2 = d-2$ vertices. In other words, we add a path with $d-2$ vertices between vertices $w_{ip}$ and $w_{jq}$ where $i\ne j$, and hence a path of length $d-1$. Let us call the vertices added between pairs of adjacent vertices in $G$ (where we added $m$ vertices) the First Addition, and the vertices added between all pairs of First Addition vertices (in the new $d-1$ vertices) the Second Addition.
+\todo{Still haven't thought of a good even case}
 
-To help aid our proof, we make the assumption that both $G'$ and $G$ do not contain isolated vertices. This case can easily be taken care of since if in $(G,k)$, $x$ is an isolated vertex then both \textsc{Packing} and \textsc{Independent Set} have the same simplification of $(G\bs\{x\},k-1)$.
+For even $d = 2m$,
 
-Now we show that $(G, k)$ is a \textsc{Yes}-instance for \textsc{Independent Set} iff $(G', k')$ is a \textsc{Yes}-instance for $d$-\textsc{Packing}:
+% we first construct the square of $G^2$ obtained by taking $G$ and adding edges between all pairs of distinct vertices that are of distance at most 2 apart in $G$. Then we add a path graph of $m$ vertices as described for the odd case $d + 1 = 2m+1$ to every vertex $v \in V$ onto the square graph $G^2$.
 
-\begin{itemize}
-	\item ($\Rightarrow$) Let $S$ be an independent set of size $k$ in $G$. Then, for odd $d$, the distance between any two distinct vertices $(u, v)$ in $S$ in $G'$ is at least $2(m+1)=d+1$ since $uv \notin E$. So if there was one vertex on a path between $u, v$ in $G$, then there are now $d+1$ vertices on a path between them in $G'$. Therefore, $S$ is a $d$-packing of size $k'$ in $G'$ for some odd $d$. For even $d$, \dots
+\begin{figure}[ht]
+\centering
+\begin{minipage}{.5\textwidth}
+  	\centering
+  	\begin{tikzpicture}[shorten >= 1pt, node distance=1cm, auto, inner sep=0pt]
+		\node[state, minimum size = 20pt] (1) {};
+		\node[state, minimum size = 20pt] (2) [below=of 1] {$v$};
+		\node[state, minimum size = 20pt] (3) [right=of 1] {};
+		\node[state, minimum size = 20pt] (4) [above left=of 1] {$u$};
 
-	% For even $d$,  if two vertices were originally not neighbours, they are now of distance $d-1 + 2 = d+1$ apart. Hence, $S$ is a $d$-\textsc{Packing} of $G'$ since the distance between any pair of the vertices of $S$ in $G'$ is at least $d+1$.
-	\item ($\Leftarrow$) Let us first consider the even case for $d = 2m$. Suppose $S$ is a $d-$packing of size $k'$ in $G'$. For any two arbitrary vertices $u,v$ we consider in what cases they can both belong to $S$
-	\begin{enumerate}
-		\item $u,v \in V$: The two vertices are from the original graph $G$. If $u$ and $v$ were adjacent to each other in $G$ then notice that the distance from $u$ to $v$ is now $m+1 < 2m+1$ since we added replaced edges with $m$ vertices on a path. In other words, both $u,v$ cannot be in $S$ if they were previously adjacent
-		\item $u \in V$, $v \in$ First Addition: $u$ belongs to a vertex in $G$ and $v$ is one of the $m$ vertices added in the First Addition. Due to the vertices of the Second Addition, there is a path from $v$ to any $v' \in$ First Addition of path length $d-1$. Let $v'$ be a First Addition vertex adjacent to $u$. Such a $v'$ must exist due to the assumption that we have no isolated vertices. But that means that there exists a path of length $d-1 + 1$ (from $v$ to $v'$ to $u$) between $u,v$ hence both $u,v$ cannot be in $S$.
-		\item $u \in V$, $v \in $ Second Addition: This works a similar manner to above. There must exist a vertex $v' \in $ First Addition such that $u, v'$ are adjacent. $v$ and $v'$ are at most $d-2 / 2 < d - 1$ distance away. The addition of these two paths will not result in a path greater than $d$ hence once again, both $u,v$ cannot be in $S$
-		\item $u,v \in$ First Addition: By the addition of the $d-1$ length path by Second Addition, this case cannot occur.
-		\item $u \in$ First Addition, $v \in$ Second Addition.
-	\end{enumerate}
-\end{itemize}
+		\path[] (1) edge (2);
+		\path[] (1) edge (3);
+		\path[] (1) edge (4);
+		\path[] (2) edge (3);
+		
+	\end{tikzpicture}
+	\caption{Example graph $G$}
+\end{minipage}%
+\begin{minipage}{.5\textwidth}
+	\centering
+	\begin{tikzpicture}[shorten >= 1pt, node distance=1cm, auto, inner sep=0pt]
+		\node[state, minimum size = 20pt] (1) {};
+		\node[state, minimum size = 20pt] (2) [below=of 1] {$v$};
+		\node[state, minimum size = 20pt] (3) [right=of 1] {};
+		\node[state, minimum size = 20pt] (4) [above left=of 1] {$u$};
 
-The reduction is clearly FPT (even polynomial) since $k' \leq k$ and the running time of the reduction is $f(k) \cdot |I|^{\mcO(1)} = n^{\mcO(1)}$ since $f(k)=c$ and $|I| = n$.
+		\node[state, minimum size = 10pt] (5) [above=of 4] {};
+		\node[state, minimum size = 10pt] (6) [above=of 5] {$u_2$};
+		\node[state, minimum size = 10pt] (7) [above=of 1] {};
+		\node[state, minimum size = 10pt] (8) [above=of 7] {};
+		\node[state, minimum size = 10pt] (9) [right=of 2] {};
+		\node[state, minimum size = 10pt] (10) [right=of 9] {$v_2$};
+		\node[state, minimum size = 10pt] (11) [right=of 3] {};
+		\node[state, minimum size = 10pt] (12) [right=of 11] {};
 
-Since there is a parameterized reduction from \textsc{Independent Set}, the $d$-\textsc{Packing} problem is $W[1]$-hard for parameter $k$. 
+		\path[] (1) edge (2);
+		\path[] (1) edge (3);
+		\path[] (1) edge (4);
+		\path[] (2) edge (3);
+
+		\path[dashed] (4) edge (5);
+		\path[dashed] (5) edge (6);
+		\path[dashed] (1) edge (7);
+		\path[dashed] (7) edge (8);
+		\path[dashed] (2) edge (9);
+		\path[dashed] (9) edge (10);
+		\path[dashed] (3) edge (11);
+		\path[dashed] (11) edge (12);
+		
+	\end{tikzpicture}
+	\caption{$G'$ construction for $d = 5$}
+\end{minipage}
+\end{figure}
+
+\begin{figure}[ht]
+\centering
+\begin{minipage}{.5\textwidth}
+  	\centering
+  	\begin{tikzpicture}[shorten >= 1pt, node distance=1cm, auto, inner sep=0pt]
+		\node[state, minimum size = 20pt] (1) {};
+		\node[state, minimum size = 20pt] (2) [below=of 1] {$v$};
+		\node[state, minimum size = 20pt] (3) [right=of 1] {};
+		\node[state, minimum size = 20pt] (4) [above left=of 1] {$u$};
+
+		\path[] (1) edge (2);
+		\path[] (1) edge (3);
+		\path[] (1) edge (4);
+		\path[] (2) edge (3);
+		% \path[] (2) edge (4);
+		% \path[] (4) edge (3);
+		
+	\end{tikzpicture}
+	\caption{Square graph $G^2$}
+\end{minipage}%
+\begin{minipage}{.5\textwidth}
+	\centering
+	\begin{tikzpicture}[shorten >= 1pt, node distance=1cm, auto, inner sep=0pt]
+		\node[state, minimum size = 20pt] (1) {};
+		\node[state, minimum size = 20pt] (2) [below=of 1] {$v$};
+		\node[state, minimum size = 20pt] (3) [right=of 1] {};
+		\node[state, minimum size = 20pt] (4) [above left=of 1] {$u$};
+
+		\node[state, minimum size = 10pt] (5) [above=of 4] {};
+		\node[state, minimum size = 10pt] (6) [above=of 5] {$u_2$};
+		\node[state, minimum size = 10pt] (7) [above=of 1] {};
+		\node[state, minimum size = 10pt] (8) [above=of 7] {};
+		\node[state, minimum size = 10pt] (9) [right=of 2] {};
+		\node[state, minimum size = 10pt] (10) [right=of 9] {$v_2$};
+		\node[state, minimum size = 10pt] (11) [right=of 3] {};
+		\node[state, minimum size = 10pt] (12) [right=of 11] {};
+
+		\path[] (1) edge (2);
+		\path[] (1) edge (3);
+		\path[] (1) edge (4);
+		\path[] (2) edge (3);
+		% \path[] (2) edge (4);
+		% \path[] (4) edge (3);
+
+		\path[dashed] (4) edge (5);
+		\path[dashed] (5) edge (6);
+		\path[dashed] (1) edge (7);
+		\path[dashed] (7) edge (8);
+		\path[dashed] (2) edge (9);
+		\path[dashed] (9) edge (10);
+		\path[dashed] (3) edge (11);
+		\path[dashed] (11) edge (12);
+		
+	\end{tikzpicture}
+	\caption{$G'$ construction for $d = 4$}
+\end{minipage}
+\end{figure}
+
+\clearpage
+
+\textbf{Equivalence}: We will show that $G$ has an independent set of size $k$ iff $G'$ has a $d$-packing of size $k$.  In all following proofs, $m \in \N$ and $m \geq 1$.
+
+$(\Rightarrow):$ Suppose that $S \subseteq V$ is an independent set of size $k$ in $G$.
+
+For odd $d = 2m+1$, consider an arbitrary vertex $s \in S$. After the construction of $G'$, let $s_m$ denote the $m$th vertex at the end of the path graph added to $s$. (We also remark that $deg(s_m) = 1$ as it is a pendant vertex.) Then consider the set
+\[ S' = \{ s_m : s_m \in V' \text{ corresponding to } s \in S \}\]
+which has size $k$ since $|S| = k$.
+Since $S$ is an independent set, then $d(u,v) \geq 2$. Due to the construction, then $d(u_m,u) = d(v_m,v) = m$ in $G'$. Hence $d(u_m,v_m) = d(u_m,u) + d(u,v) + d(v,v_m) \geq 2m + 2$ in $G'$. As this is true of any two vertices $u_m, v_m \in S'$, the shortest path between any two vertices of $S'$ is $2m+2 = d+ 1$, making $S'$ a $d$-packing of size $k$.
+
+For even $d = 2m$, the proof proceeds exactly the same as the odd case, including the construction of $S'$ (and $|S'| = k$) except that for two vertices $u_m, v_m \in S'$ are the pendant vertices of paths staring from $u, v \in S$ with the property $d(u,v) \geq 1$ in $G'$ as we constructed $G'$ from the square graph $G^2$. Now this means that we have a lower bound on the distance $d(u_m,v_m) = d(u_m,u) + d(u,v) + d(v_m,v) \geq 2m + 1$. But as this indicates that for any two vertices $S'$ are at least a distance $2m + 1 = d+1$ away meaning $S'$ is a $d$-packing of size $k$.
+
+$(\Leftarrow):$ Suppose that $S' \subseteq V$ is a $d$-packing of size $k$ in $G' = (V', E')$. Notice that $G'$ was constructed from $G$ so let $V \subseteq V'$ denote those vertices in $G'$ which were originally in $G$.
+
+For odd $d = 2m+1$, construct a set $S = \{s_1, s_2, ..., s_m\}$ from $S' = \{s'_1, s'_2, ... ,s'_k\}$ by
+\[ s_i = \begin{cases}
+	s'_i, \text{ if } s'_i \in V & \n
+	v, \text{ if }  s'_i = v_j & \text{for some } v_j \in V' \text{ with $v \in V$ being the start of} \n & \text{the path graph which $v_j$ lies on}
+\end{cases}\]
+In other words, we obtain $S$ by taking the elements of $S'$ and mapping them pack down to a vertex in $G$ by following the path graph, which was added to construct $G'$. Once again, let us consider two vertices $u,v \in S'$. We have 3 cases to deal with:
+\begin{enumerate}
+	\item $u,v \in V$ - This means that both vertices in the $d$-packing already lie on $G$. By definition of $S$, $u$ and $v$ are also in $S$. Since both $u,v \in S'$ then $d(u,v) \geq d+1$ in $G$ and in $G'$ which means that they cannot be adjacent in $G$.
+	\item $u \in V$, $v = v_j$ for some added vertex $v_j$ on an added path - Let $v' \in V$ be the vertex which the path containing $v_j$ starts from due to the construction of $G'$. In other words, $v'$ is the vertex from the original graph and $v$ is a path-vertex of the constructed path length $m$ starting from $v'$. By definition of $S$, we place $u$ and $v'$ in $S$. Now $d(v,v') \leq m$ by construction of $G'$. Since $d(u,v') = d(u,v) - d(v,v') \geq d + 1 - m = m + 1$, meaning that $u$ and $v'$ are not adjacent in $G$.
+	\item $u = u_i$ and $v = v_j$ for some added vertex $u_j,v_j$ by construction of $G'$. Let $u' \in V$ and $v' \in V$ be the vertex in $G$ from which the path containing $u$ and $v$ start from, respectively. By definition of $S$, $u'$ and $v'$ are both in $S$. Now $d(u',v') = d(u,v) - d(u,u') - d(v,v')$ since the shortest path from $u$ to $v$ must path through both $u'$ and then $v'$ by the construction of $G'$. Since $d(u,u') \leq m$ and $d(v,v') \leq m$ then $d(u',v') \geq d + 1 - m - m = 2$. Hence $u', v'$ are not adjacent in $G$
+\end{enumerate}
+These three cases show that for any two vertices $u,v \in S'$, they get mapped onto two vertices in $S$ such that those two vertices are not adjacent to each other. As this applies for all pairs, then $S$ is an independent set since no two vertices share an edge.
+
+% For even $d = 2m$, the definition of $S$ is exactly the same and the proof is very similar, except since we now have that $G'$ was constructed on $G^2$ we have some new bounds on 
+
+% In other words, given any instance $(G=(V,E), k)$ of \textsc{Independent Set}, we describe an FPT algorithm that contructs an equivalent instance $(G'=(V',E'), k')$ of $d$-\textsc{Packing}.
+
+% First, set $k' \leftarrow k$. For odd $d=2m+1 \ge 1$ where $m$ is some natural number, we replace the edge between all pairs of distinct vertices $(u, v)$ by a path graph on $m$ vertices ($P_m$) by connecting each respective endpoint of the path graph to a vertex $u, v$. In other words, we add $m$ vertices $w_1, w_2, \dotsc, w_m \in V'$ for each pair $(u, v)$ of adjacent vertices, remove the original edge $uv$, and add edges $uw_1, w_1w_2, \dotsc, w_mv \in E'$.
+
+% For even $d=2m$, we first add $m$ vertices for all pairs of adjacent vertices as before. For edge $i$ denote its added vertices $V_{i} = \{w_{i1}, w_{i2}, \dotsc, w_{im}\}$ for $i \in \{1, 2, \dotsc, |E|\}$ and let $V' = V \cup V^{*}$ where $V^{*} = \bigcup_{i=1}^{|E|} V_i$. Then for each pair of vertices $(u, v) \in V_i \times V_j$ where $i \ne j$, we add a path graph on $2m-2 = d-2$ vertices. In other words, we add a path with $d-2$ vertices between vertices $w_{ip}$ and $w_{jq}$ where $i\ne j$, and hence a path of length $d-1$. Let us call the vertices added between pairs of adjacent vertices in $G$ (where we added $m$ vertices) the First Addition, and the vertices added between all pairs of First Addition vertices (in the new $d-1$ vertices) the Second Addition.
+
+% To help aid our proof, we make the assumption that both $G'$ and $G$ do not contain isolated vertices. This case can easily be taken care of since if in $(G,k)$, $x$ is an isolated vertex then both \textsc{Packing} and \textsc{Independent Set} have the same simplification of $(G\bs\{x\},k-1)$.
+
+% Now we show that $(G, k)$ is a \textsc{Yes}-instance for \textsc{Independent Set} iff $(G', k')$ is a \textsc{Yes}-instance for $d$-\textsc{Packing}:
+
+% \begin{itemize}
+% 	\item ($\Rightarrow$) Let $S$ be an independent set of size $k$ in $G$. Then, for odd $d$, the distance between any two distinct vertices $(u, v)$ in $S$ in $G'$ is at least $2(m+1)=d+1$ since $uv \notin E$. So if there was one vertex on a path between $u, v$ in $G$, then there are now $d+1$ vertices on a path between them in $G'$. Therefore, $S$ is a $d$-packing of size $k'$ in $G'$ for some odd $d$. For even $d$, \dots
+
+% 	% For even $d$,  if two vertices were originally not neighbours, they are now of distance $d-1 + 2 = d+1$ apart. Hence, $S$ is a $d$-\textsc{Packing} of $G'$ since the distance between any pair of the vertices of $S$ in $G'$ is at least $d+1$.
+% 	\item ($\Leftarrow$) Let us first consider the even case for $d = 2m$. Suppose $S$ is a $d-$packing of size $k'$ in $G'$. For any two arbitrary vertices $u,v$ we consider in what cases they can both belong to $S$
+% 	\begin{enumerate}
+% 		\item $u,v \in V$: The two vertices are from the original graph $G$. If $u$ and $v$ were adjacent to each other in $G$ then notice that the distance from $u$ to $v$ is now $m+1 < 2m+1$ since we added replaced edges with $m$ vertices on a path. In other words, both $u,v$ cannot be in $S$ if they were previously adjacent
+% 		\item $u \in V$, $v \in$ First Addition: $u$ belongs to a vertex in $G$ and $v$ is one of the $m$ vertices added in the First Addition. Due to the vertices of the Second Addition, there is a path from $v$ to any $v' \in$ First Addition of path length $d-1$. Let $v'$ be a First Addition vertex adjacent to $u$. Such a $v'$ must exist due to the assumption that we have no isolated vertices. But that means that there exists a path of length $d-1 + 1$ (from $v$ to $v'$ to $u$) between $u,v$ hence both $u,v$ cannot be in $S$.
+% 		\item $u \in V$, $v \in $ Second Addition: This works a similar manner to above. There must exist a vertex $v' \in $ First Addition such that $u, v'$ are adjacent. $v$ and $v'$ are at most $d-2 / 2 < d - 1$ distance away. The addition of these two paths will not result in a path greater than $d$ hence once again, both $u,v$ cannot be in $S$
+% 		\item $u,v \in$ First Addition: By the addition of the $d-1$ length path by Second Addition, this case cannot occur.
+% 		\item $u \in$ First Addition, $v \in$ Second Addition.
+% 	\end{enumerate}
+% \end{itemize}
+
+% The reduction is clearly FPT (even polynomial) since $k' \leq k$ and the running time of the reduction is $f(k) \cdot |I|^{\mcO(1)} = n^{\mcO(1)}$ since $f(k)=c$ and $|I| = n$.
+
+% Since there is a parameterized reduction from \textsc{Independent Set}, the $d$-\textsc{Packing} problem is $W[1]$-hard for parameter $k$. 
 
 \section{\sc Packing \textnormal{is FPT for parameter $d + tw(G)$}}
 
