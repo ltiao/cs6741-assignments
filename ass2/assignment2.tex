@@ -180,7 +180,7 @@ First note that in any graph, the distance between any two distinct vertices is 
 
 Next observe that in an independent set, the distance between any two distinct vertices is at least 2. Therefore, any independent set of $G$ is a $1$-packing. Denote \texttt{\#Indep-set} the polynomial space and $\mcO^*(1.2377^n)$ time branching algorithm of Wahlstr\"{o}m \cite{Dahllof2005,Wahlstr2008} that counts the number of independent sets in any graph. Then for $d=1$, we simply run \texttt{\#Indep-set} on $G$ using polynomial space, by virtue of the fact that \texttt{\#Indep-set} is a polynomial space branching algorithm.
 
-For $d \geq 2$, we consider the $d$th power of $G^d$ by adding edges between all pairs of distinct vertices that are of distance distance at most $d$ apart in $G$. Then for any pair of distinct vertices that are not adjacent in $G^d$, the distance between them in $G$ must be at least $d+1$. It immediately follows that a subset of vertices is an independent set of $G^d$ if and only if it is a $d$-packing of $G$.
+For $d \geq 2$, we consider the $d$th power $G^d$ of $G$ by adding edges between all pairs of distinct vertices that are of distance distance at most $d$ apart in $G$. Then for any pair of distinct vertices that are not adjacent in $G^d$, the distance between them in $G$ must be at least $d+1$. It immediately follows that a subset of vertices is an independent set of $G^d$ if and only if it is a $d$-packing of $G$.
 
 Let $m=|E|$. Then we compute the graph $G^d$ in time $\mcO(mn)$ and polynomial space by performing a breadth first search starting at each vertex to determine the distances to all other vertices and insert edges where the distance is at most $d$. We then run \texttt{\#Indep-set} on $G^d$ and output its result. Since we have a polynomial time and space reduction and a polynomial space and $\mcO^*(1.2377^n)$ time branching algorithm which solves our reduced instance, we also have a polynomial space and $\mcO^*(1.2377^n)$ time branching algorithm in this case.
 
@@ -269,13 +269,15 @@ Therefore, \textsc{Packing Coloring} can be solved in $\mcO^*(2.2377^n)$ time an
 
 We restrict our attention to \emph{maximal} $d$-packings. A $d$-packing is maximal if it is not a proper subset of any other $d$-packing. Observe that for any vertex $v$ of $G$, every maximal $d$-packing contains a vertex from $N_G^d[v]$: if a vertex $v$ is in $d$-packing $S$ then no vertex in its neighborhood of radius $d$ can be in $S$. On the other hand, if $S$ is a maximal $d$-packing and $v \notin S$ then at least one vertex in its neighborhood of radius $d$ must be in $S$ since, otherwise, $S\cup \{ v \}$ would be a larger $d$-packing, contradicting the optimality of $S$.
 
+$\Delta = \Delta(G)$
+
 We have a $|N_G^d[v]|$-way branching
 
 Since $k$ decreases by 1 in each branch, and the number of branches
 
-$|N_G^d[v]| \leq \sum_{i=0}^{d} \Delta(G)^i = \mcO(\Delta(G)^d)$ 
+$|N_G^d[v]| \leq \sum_{i=0}^{d} \Delta^i = \frac{\Delta^{d+1}-1}{\Delta-1} = \mcO(\Delta^{d+1})$ 
 
-so we obtain a running time of $\mcO^{*}(\Delta(G)^{kd})$
+so we obtain a running time of $\mcO^{*}((\Delta^{d+1})^k)$
 
 \begin{algorithm}[H]
 \caption{\texttt{Packing}}          % give the algorithm a caption
@@ -312,7 +314,7 @@ We show that the $d$-\textsc{Packing} problem is $W[1]$-hard for parameter $k$ b
 
 \textbf{Construction:} Let $(G = (V,E) ,k)$ be an instance for $\textsc{Independent Set}$. We construct an instance $(G' = (V',E'),k')$ for $d-$\textsc{Packing}. First set $k' \leftarrow k$. 
 
-For odd $d = 2m+1$ where $m$ is a natural number, for every vertex $v \in V$ we connect a path graph $(P_m)$ of length $m$ to $v$. In other words we add $m$ vertices $v_1, v_2, ..., v_m \in V'$ and $vv_1, v_1v_2,...,v_{m-1}v_m \in E'$ for every vertex $v$.
+For odd $d = 2m+1$ where $m$ is a natural number, for every vertex $v \in V$ we append a path of length $m$ to $v$. In other words we add $m$ vertices $v_1, v_2, ..., v_m \in V'$ and $vv_1, v_1v_2,...,v_{m-1}v_m \in E'$ for every vertex $v$.
 
 \todo{Still haven't thought of a good even case}
 
@@ -438,7 +440,7 @@ For even $d = 2m$,
 
 $(\Rightarrow):$ Suppose that $S \subseteq V$ is an independent set of size $k$ in $G$.
 
-For odd $d = 2m+1$, consider an arbitrary vertex $s \in S$. After the construction of $G'$, let $s_m$ denote the $m$th vertex at the end of the path graph added to $s$. (We also remark that $deg(s_m) = 1$ as it is a pendant vertex.) Then consider the set
+For odd $d = 2m+1$, consider an arbitrary vertex $s \in S$. After the construction of $G'$, let $s_m$ denote the $m$th vertex at the end of the path added to $s$. (We also remark that $\mathrm{deg}_{G'}(s_m) = 1$ as it is a pendant vertex.) Then consider the set
 \[ S' = \{ s_m : s_m \in V' \text{ corresponding to } s \in S \}\]
 which has size $k$ since $|S| = k$.
 Since $S$ is an independent set, then $d(u,v) \geq 2$. Due to the construction, then $d(u_m,u) = d(v_m,v) = m$ in $G'$. Hence $d(u_m,v_m) = d(u_m,u) + d(u,v) + d(v,v_m) \geq 2m + 2$ in $G'$. As this is true of any two vertices $u_m, v_m \in S'$, the shortest path between any two vertices of $S'$ is $2m+2 = d+ 1$, making $S'$ a $d$-packing of size $k$.
