@@ -179,14 +179,13 @@ For a sequence of $k$ non-negative integers $D = (d_1,...,d_k)$, a \emph{D-packi
 
 Consider a graph $G = (V, E)$ and let $n = |V|$.
 
-First note that in any graph, the distance between any two distinct vertices is at least 1. Therefore, any subset of vertices $S \subseteq V$ is a $0$-packing, of which there are $2^n$. So for $d=0$, we need only calculate $|V|$ and $2^{|V|}$, which can be done in \todo{Why was your previous bound so pessimistic? Edward: No reason, I just wanted to cover bases. Linear is fine. $n^{\mcO(1)}$}
- $\mcO(n)$ time and space.
+First note that in any graph, the distance between any two distinct vertices is at least 1. Therefore, any subset of vertices $S \subseteq V$ is a $0$-packing, of which there are $2^n$. So for $d=0$, we need only calculate $|V|$ and $2^{|V|}$, which can be done in $\mcO(n)$ time and space.
 
 Next observe that in an independent set, the distance between any two distinct vertices is at least 2. Therefore, any independent set of $G$ is a $1$-packing. Denote \texttt{\#Indep-set} the polynomial space and $\mcO^*(1.2377^n)$ time branching algorithm of Wahlstr\"{o}m \cite{Dahllof2005,Wahlstr2008} that counts the number of independent sets in any graph. Then for $d=1$, we simply run \texttt{\#Indep-set} on $G$ using polynomial space, by virtue of the fact that \texttt{\#Indep-set} is a polynomial space branching algorithm.
 
-For $d \geq 2$, we create a new graph $G'$ by adding edges between all pairs of distinct vertices that are of distance less than $d+1$ apart. Then for any pair of distinct vertices that are not adjacent in $G'$, the distance between them in $G$ must be at least $d+1$. It immediately follows that a subset of vertices is an independent set of $G'$ if and only if it is a $d$-packing of $G$.
+For $d \geq 2$, we consider the $d$th graph power $G^d$ by adding edges between all pairs of distinct vertices that are of distance distance at most $d$ apart in $G$. Then for any pair of distinct vertices that are not adjacent in $G^d$, the distance between them in $G$ must be at least $d+1$. It immediately follows that a subset of vertices is an independent set of $G^d$ if and only if it is a $d$-packing of $G$.
 
-We compute the graph $G'$ in polynomial time and space by performing a depth-limited search (limited in $d+1$) for pairs of vertices of distance less than $d+1$ apart and inserting new edges between them. We then run \texttt{\#Indep-set} on $G'$ and output its result. Since we have a polynomial time and space reduction and a polynomial space and $\mcO^*(1.2377^n)$ time branching algorithm which solves our reduced instance, we also have a polynomial space and $\mcO^*(1.2377^n)$ time branching algorithm in this case.
+Let $m=|E|$. Then we compute the graph $G^d$ in time $\mcO(mn)$ and polynomial space by performing a breadth first search starting at each vertex to determine the distances to all other vertices and insert edges where the distance is at most $d$. We then run \texttt{\#Indep-set} on $G^d$ and output its result. Since we have a polynomial time and space reduction and a polynomial space and $\mcO^*(1.2377^n)$ time branching algorithm which solves our reduced instance, we also have a polynomial space and $\mcO^*(1.2377^n)$ time branching algorithm in this case.
 
 We summarize the above in \cref{algo:num_packing} and denote it as \texttt{\#Packing}.
 
@@ -206,8 +205,8 @@ We summarize the above in \cref{algo:num_packing} and denote it as \texttt{\#Pac
 	\textbf{return} \texttt{\#Indep-set}($G$)
 }
 \If{$d \geq 2$}{
-	Let $G' = (V,E')$ where $E' = E \cup E^*$ and $E^* = \{ uv : d_G(u,v) \leq d \}$\n
-	\textbf{return} \texttt{\#Indep-set}($G'$)
+	Let $G^d = (V,E')$ where $E' = E \cup E^*$ and $E^* = \{ uv : d_G(u,v) \leq d \}$\n
+	\textbf{return} \texttt{\#Indep-set}($G^d$)
 }
 
 \end{algorithm}
