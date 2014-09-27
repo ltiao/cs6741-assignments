@@ -523,9 +523,9 @@ Now since $u,v \in S'$ which is a 2-packing then $d(u,v) \geq 3$. Now in Case 3,
 
 In Case 2, there exists a \emph{middle-vertex} $u'$ which is adjacent to $u$ since there are no isolated vertices. That is to say, $d(u,u') = 1$. Now $d(u',v) = 1$ since both $u'$ and $v$ are \emph{middle-vertices} meaning $d(u,v) = 2$. Hence $u,v$ cannot satisfy Case 2.
 
-This means that any two vertices $u,v \in S'$ must satisfy case 1.
+This means that any two vertices $u,v \in S'$ must satisfy Case 1.
 
-An independent set $S = \{s_1,s_2,...,s_k\}$ is constructed from $S' = \{s_1,s_2,...,s_k\}$, that is to say that a 2-packing on $G'$ corresponds directly to an independent set. This is because we have shown that $S'$ only contains vertices in $V$, the original vertex set of $G$ and the fact that if $u,v$ were in fact adjacent then $d(u,v) = 2$ in $G'$ which contradicts $d(u,v) \geq 3$. Thus $S$ is an independent set for $G$.
+So we can construct an independent set $S = \{s_1,s_2,...,s_k\}$ directly from $S' = \{s_1,s_2,...,s_k\}$, that is to say that a 2-packing on $G'$ corresponds directly to an independent set on $G$. This is because we have shown that $S'$ only contains vertices in $V$, the original vertex set of $G$ and the fact that if $u,v$ were in fact adjacent then $d(u,v) = 2$ in $G'$ which contradicts $d(u,v) \geq 3$. Thus $S$ is an independent set for $G$.
 
 \textbf{Conclusion:} Now as we have exhausted all cases, then any \textsc{Yes} instance of \textsc{Independent Set} of size $k$ corresponds to a \textsc{Yes} instance of $d-$\textsc{Packing} for any fixed $d$ of size $k$. 
 
