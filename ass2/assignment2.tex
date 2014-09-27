@@ -1,4 +1,4 @@
-\documentclass[12pt, a4paper]{article}
+\documentclass[10pt, a4paper]{article}
 \usepackage{amsmath}
 \usepackage{amssymb}
 \usepackage{amsthm}
@@ -8,7 +8,7 @@
 \usepackage{enumerate}
 \usepackage{graphicx}
 \usepackage{tikz}
-\usetikzlibrary{automata, positioning}
+\usetikzlibrary{automata, positioning, shapes}
 % \usepackage{pgfplots}
 \usepackage{caption}
 \usepackage{mathtools}
@@ -124,8 +124,8 @@
 \begin{document}
 \maketitle
 
-\todo{Consistency between British and American spelling (i.e. colour vs. color) Edward: Let's go with American? Serge's questions use color}
-\todo{Spellcheck}
+% \todo{Consistency between British and American spelling (i.e. colour vs. color) Edward: Let's go with American? Serge's questions use color}
+% \todo{Spellcheck}
 
 \section*{Preliminaries}
 
@@ -175,7 +175,7 @@ For a sequence of $k$ non-negative integers $D = (d_1,...,d_k)$, a \emph{D-packi
 
 \section{\#\sc Packing}
 
-\todo{Formalize and Proofread}
+% \todo{Formalize and Proofread}
 
 Consider a graph $G = (V, E)$ and let $n = |V|$.
 
@@ -183,7 +183,7 @@ First note that in any graph, the distance between any two distinct vertices is 
 
 Next observe that in an independent set, the distance between any two distinct vertices is at least 2. Therefore, any independent set of $G$ is a $1$-packing. Denote \texttt{\#Indep-set} the polynomial space and $\mcO^*(1.2377^n)$ time branching algorithm of Wahlstr\"{o}m \cite{Dahllof2005,Wahlstr2008} that counts the number of independent sets in any graph. Then for $d=1$, we simply run \texttt{\#Indep-set} on $G$ using polynomial space, by virtue of the fact that \texttt{\#Indep-set} is a polynomial space branching algorithm.
 
-For $d \geq 2$, we consider the $d$th graph power $G^d$ by adding edges between all pairs of distinct vertices that are of distance distance at most $d$ apart in $G$. Then for any pair of distinct vertices that are not adjacent in $G^d$, the distance between them in $G$ must be at least $d+1$. It immediately follows that a subset of vertices is an independent set of $G^d$ if and only if it is a $d$-packing of $G$.
+For $d \geq 2$, we consider the $d$th power of $G^d$ by adding edges between all pairs of distinct vertices that are of distance distance at most $d$ apart in $G$. Then for any pair of distinct vertices that are not adjacent in $G^d$, the distance between them in $G$ must be at least $d+1$. It immediately follows that a subset of vertices is an independent set of $G^d$ if and only if it is a $d$-packing of $G$.
 
 Let $m=|E|$. Then we compute the graph $G^d$ in time $\mcO(mn)$ and polynomial space by performing a breadth first search starting at each vertex to determine the distances to all other vertices and insert edges where the distance is at most $d$. We then run \texttt{\#Indep-set} on $G^d$ and output its result. Since we have a polynomial time and space reduction and a polynomial space and $\mcO^*(1.2377^n)$ time branching algorithm which solves our reduced instance, we also have a polynomial space and $\mcO^*(1.2377^n)$ time branching algorithm in this case.
 
@@ -213,6 +213,8 @@ We summarize the above in \cref{algo:num_packing} and denote it as \texttt{\#Pac
 
 Finally, we see that in all cases (i.e. for all $d \ge 0$), \texttt{\#Packing} runs in polynomial space and $\mcO^*(1.2377^n)$ time.
 
+
+\clearpage
 \section{\sc Packing Coloring  (\textnormal{Exponential space})}
 
 First note that a $k$-coloring of a graph is a special case of a $D$-packing coloring 
@@ -275,9 +277,10 @@ Therefore, \textsc{Packing Coloring} can be solved in $\mcO^*(2.2377^n)$ time an
 
 From (1) we can reduce \textsc{Packing} to \textsc{Independent set} in poly-time with parameter $d$. We know that Independent set and Vertex cover can easily be reduced, but with a parameter $k$, Independent set is $W[1]$-hard and not FPT since we are looking for a vertex cover of size $n-k$. However, since we have $\Delta(G)$ as a parameter, we just run \textsc{Vertex Cover} with size $\Delta(G) \times k$, which is still FPT in parameter $k + d + \Delta(G)$.
 
+\clearpage
 \section{$d$-\sc Packing \textnormal{is $W[1]$-hard for parameter $k$}}
 
-\todo{Formalize and Proofread}
+% \todo{Formalize and Proofread}
 
 We show that the $d$-\textsc{Packing} problem is $W[1]$-hard for parameter $k$ by providing a parameterized reduction from a well-known $W[1]$-hard problem, namely, \textsc{Independent Set}.	
 
@@ -285,58 +288,153 @@ We show that the $d$-\textsc{Packing} problem is $W[1]$-hard for parameter $k$ b
 
 For odd $d = 2m+1$ where $m$ is a natural number, for every vertex $v \in V$ we connect a path graph $(P_m)$ of length $m$ to $v$. In other words we add $m$ vertices $v_1, v_2, ..., v_m \in V'$ and $vv_1, v_1v_2,...,v_{m-1}v_m \in E'$ for every vertex $v$.
 
-For even $d = 2m$, first add a path graph of $m$ vertices as described above to every vertex $v \in V$. Then also, for every vertex $v \in V$, if there exists a vertex $u \in V$ such that $u \in N[v]$ in $G$ then add $v_1u \in E'$ where $v_1$ is the first vertex of the path graph which is connected to vertex $v$.
+\todo{Still haven't thought of a good even case}
 
+For even $d = 2m$,
 
-\begin{figure}[h!]
-	\centering
-	\begin{tikzpicture}[yscale = 1, xscale = 1]
-		\draw [black] (0,0) circle (0.5);
-		\draw [black] (0,-3) circle (0.5);
-		\draw [black] (3,0) circle (0.5);
-		\draw [black] (-3,3) circle (0.5);
+% we first construct the square of $G^2$ obtained by taking $G$ and adding edges between all pairs of distinct vertices that are of distance at most 2 apart in $G$. Then we add a path graph of $m$ vertices as described for the odd case $d + 1 = 2m+1$ to every vertex $v \in V$ onto the square graph $G^2$.
 
-		\draw [thick, black] (0.5,0) -- (2.5,0);		
-		\draw [thick, black] (0,-0.5) -- (0,-2.5);		
-		\draw [thick, black] (0.5,0) -- (2.5,0);		
-		\draw [thick, black] (0.5,0) -- (2.5,0);		
+\begin{figure}[ht]
+\centering
+\begin{minipage}{.5\textwidth}
+  	\centering
+  	\begin{tikzpicture}[shorten >= 1pt, node distance=1cm, auto, inner sep=0pt]
+		\node[state, minimum size = 20pt] (1) {};
+		\node[state, minimum size = 20pt] (2) [below=of 1] {$v$};
+		\node[state, minimum size = 20pt] (3) [right=of 1] {};
+		\node[state, minimum size = 20pt] (4) [above left=of 1] {$u$};
 
-
-
-		% \draw [black] (4,0) circle (0.5);
-		% \draw [black] (8,0) circle (0.5);
-		% \draw [black] (6,-3) circle (0.5);
-		% \draw [black] (2,-3) circle (0.5);
-
-		% \draw [thick, ->, black] (0.5,0) -- (3.5,0);
-		% \draw [thick, ->, black] (4.5,0) -- (7.5,0);
-		% \draw [thick, ->, black] (7.75,-0.433) -- (6.25,-3.0 + 0.433);
-		% \draw [thick, ->, black] (5.5,-3) -- (2.5,-3);
-		% \draw [thick, ->, black] (1.75,-3 + 0.433) -- (0.25,-0.433);
-
-		% \draw [thick, ->, black] (6.25, -3.433) to [out=-45, in = -85] (7, -3) to [out=85, in=45] (6.24, -3.0 + 0.433);
-
-		% \node [above] at (0,0) {$p1$};
-		% \node [below] at (0,0) {NCS};
-		% \node at (4,0) {$p2$};
-		% \node at (8,0) {$p3$};
-		% \node at (6,-3) {$p4$};
-		% \node [above] at (2,-3) {$p5$};
-		% \node [below] at (2,-3) {CS};
-
-		% \node at (4,-1.2) {\textbf{p}};
-		% \draw [black] (4,-1.2) circle (0.2);
-		% \node [above] at (2,0) {b[0] := true};
-		% \node [above] at (6,0) {tmp0 := turn[1]};
-		% \node [right] at (7.2,-1.5) {turn[0] := tmp0};
-		% \node [above] at (4,-2.6) { ( b[1] = false $\lor$ tmp0 $\neq$ turn[1] ) };
-		% \node [left] at (0.8,-1.5) {b[0] := false};
-
-		% \node [above right] at (7,-3) {( b[1] = true $\land$};
-		% \node [below right] at (7,-3) {tmp0 = turn[1] )};
+		\path[] (1) edge (2);
+		\path[] (1) edge (3);
+		\path[] (1) edge (4);
+		\path[] (2) edge (3);
+		
 	\end{tikzpicture}
+	\caption{Example graph $G$}
+\end{minipage}%
+\begin{minipage}{.5\textwidth}
+	\centering
+	\begin{tikzpicture}[shorten >= 1pt, node distance=1cm, auto, inner sep=0pt]
+		\node[state, minimum size = 20pt] (1) {};
+		\node[state, minimum size = 20pt] (2) [below=of 1] {$v$};
+		\node[state, minimum size = 20pt] (3) [right=of 1] {};
+		\node[state, minimum size = 20pt] (4) [above left=of 1] {$u$};
+
+		\node[state, minimum size = 10pt] (5) [above=of 4] {};
+		\node[state, minimum size = 10pt] (6) [above=of 5] {$u_2$};
+		\node[state, minimum size = 10pt] (7) [above=of 1] {};
+		\node[state, minimum size = 10pt] (8) [above=of 7] {};
+		\node[state, minimum size = 10pt] (9) [right=of 2] {};
+		\node[state, minimum size = 10pt] (10) [right=of 9] {$v_2$};
+		\node[state, minimum size = 10pt] (11) [right=of 3] {};
+		\node[state, minimum size = 10pt] (12) [right=of 11] {};
+
+		\path[] (1) edge (2);
+		\path[] (1) edge (3);
+		\path[] (1) edge (4);
+		\path[] (2) edge (3);
+
+		\path[dashed] (4) edge (5);
+		\path[dashed] (5) edge (6);
+		\path[dashed] (1) edge (7);
+		\path[dashed] (7) edge (8);
+		\path[dashed] (2) edge (9);
+		\path[dashed] (9) edge (10);
+		\path[dashed] (3) edge (11);
+		\path[dashed] (11) edge (12);
+		
+	\end{tikzpicture}
+	\caption{$G'$ construction for $d = 5$}
+\end{minipage}
 \end{figure}
 
+\begin{figure}[ht]
+\centering
+\begin{minipage}{.5\textwidth}
+  	\centering
+  	\begin{tikzpicture}[shorten >= 1pt, node distance=1cm, auto, inner sep=0pt]
+		\node[state, minimum size = 20pt] (1) {};
+		\node[state, minimum size = 20pt] (2) [below=of 1] {$v$};
+		\node[state, minimum size = 20pt] (3) [right=of 1] {};
+		\node[state, minimum size = 20pt] (4) [above left=of 1] {$u$};
+
+		\path[] (1) edge (2);
+		\path[] (1) edge (3);
+		\path[] (1) edge (4);
+		\path[] (2) edge (3);
+		% \path[] (2) edge (4);
+		% \path[] (4) edge (3);
+		
+	\end{tikzpicture}
+	\caption{Square graph $G^2$}
+\end{minipage}%
+\begin{minipage}{.5\textwidth}
+	\centering
+	\begin{tikzpicture}[shorten >= 1pt, node distance=1cm, auto, inner sep=0pt]
+		\node[state, minimum size = 20pt] (1) {};
+		\node[state, minimum size = 20pt] (2) [below=of 1] {$v$};
+		\node[state, minimum size = 20pt] (3) [right=of 1] {};
+		\node[state, minimum size = 20pt] (4) [above left=of 1] {$u$};
+
+		\node[state, minimum size = 10pt] (5) [above=of 4] {};
+		\node[state, minimum size = 10pt] (6) [above=of 5] {$u_2$};
+		\node[state, minimum size = 10pt] (7) [above=of 1] {};
+		\node[state, minimum size = 10pt] (8) [above=of 7] {};
+		\node[state, minimum size = 10pt] (9) [right=of 2] {};
+		\node[state, minimum size = 10pt] (10) [right=of 9] {$v_2$};
+		\node[state, minimum size = 10pt] (11) [right=of 3] {};
+		\node[state, minimum size = 10pt] (12) [right=of 11] {};
+
+		\path[] (1) edge (2);
+		\path[] (1) edge (3);
+		\path[] (1) edge (4);
+		\path[] (2) edge (3);
+		% \path[] (2) edge (4);
+		% \path[] (4) edge (3);
+
+		\path[dashed] (4) edge (5);
+		\path[dashed] (5) edge (6);
+		\path[dashed] (1) edge (7);
+		\path[dashed] (7) edge (8);
+		\path[dashed] (2) edge (9);
+		\path[dashed] (9) edge (10);
+		\path[dashed] (3) edge (11);
+		\path[dashed] (11) edge (12);
+		
+	\end{tikzpicture}
+	\caption{$G'$ construction for $d = 4$}
+\end{minipage}
+\end{figure}
+
+\clearpage
+
+\textbf{Equivalence}: We will show that $G$ has an independent set of size $k$ iff $G'$ has a $d$-packing of size $k$.  In all following proofs, $m \in \N$ and $m \geq 1$.
+
+$(\Rightarrow):$ Suppose that $S \subseteq V$ is an independent set of size $k$ in $G$.
+
+For odd $d = 2m+1$, consider an arbitrary vertex $s \in S$. After the construction of $G'$, let $s_m$ denote the $m$th vertex at the end of the path graph added to $s$. (We also remark that $deg(s_m) = 1$ as it is a pendant vertex.) Then consider the set
+\[ S' = \{ s_m : s_m \in V' \text{ corresponding to } s \in S \}\]
+which has size $k$ since $|S| = k$.
+Since $S$ is an independent set, then $d(u,v) \geq 2$. Due to the construction, then $d(u_m,u) = d(v_m,v) = m$ in $G'$. Hence $d(u_m,v_m) = d(u_m,u) + d(u,v) + d(v,v_m) \geq 2m + 2$ in $G'$. As this is true of any two vertices $u_m, v_m \in S'$, the shortest path between any two vertices of $S'$ is $2m+2 = d+ 1$, making $S'$ a $d$-packing of size $k$.
+
+For even $d = 2m$, the proof proceeds exactly the same as the odd case, including the construction of $S'$ (and $|S'| = k$) except that for two vertices $u_m, v_m \in S'$ are the pendant vertices of paths staring from $u, v \in S$ with the property $d(u,v) \geq 1$ in $G'$ as we constructed $G'$ from the square graph $G^2$. Now this means that we have a lower bound on the distance $d(u_m,v_m) = d(u_m,u) + d(u,v) + d(v_m,v) \geq 2m + 1$. But as this indicates that for any two vertices $S'$ are at least a distance $2m + 1 = d+1$ away meaning $S'$ is a $d$-packing of size $k$.
+
+$(\Leftarrow):$ Suppose that $S' \subseteq V$ is a $d$-packing of size $k$ in $G' = (V', E')$. Notice that $G'$ was constructed from $G$ so let $V \subseteq V'$ denote those vertices in $G'$ which were originally in $G$.
+
+For odd $d = 2m+1$, construct a set $S = \{s_1, s_2, ..., s_m\}$ from $S' = \{s'_1, s'_2, ... ,s'_k\}$ by
+\[ s_i = \begin{cases}
+	s'_i, \text{ if } s'_i \in V & \n
+	v, \text{ if }  s'_i = v_j & \text{for some } v_j \in V' \text{ with $v \in V$ being the start of} \n & \text{the path graph which $v_j$ lies on}
+\end{cases}\]
+In other words, we obtain $S$ by taking the elements of $S'$ and mapping them pack down to a vertex in $G$ by following the path graph, which was added to construct $G'$. Once again, let us consider two vertices $u,v \in S'$. We have 3 cases to deal with:
+\begin{enumerate}
+	\item $u,v \in V$ - This means that both vertices in the $d$-packing already lie on $G$. By definition of $S$, $u$ and $v$ are also in $S$. Since both $u,v \in S'$ then $d(u,v) \geq d+1$ in $G$ and in $G'$ which means that they cannot be adjacent in $G$.
+	\item $u \in V$, $v = v_j$ for some added vertex $v_j$ on an added path - Let $v' \in V$ be the vertex which the path containing $v_j$ starts from due to the construction of $G'$. In other words, $v'$ is the vertex from the original graph and $v$ is a path-vertex of the constructed path length $m$ starting from $v'$. By definition of $S$, we place $u$ and $v'$ in $S$. Now $d(v,v') \leq m$ by construction of $G'$. Since $d(u,v') = d(u,v) - d(v,v') \geq d + 1 - m = m + 1$, meaning that $u$ and $v'$ are not adjacent in $G$.
+	\item $u = u_i$ and $v = v_j$ for some added vertex $u_j,v_j$ by construction of $G'$. Let $u' \in V$ and $v' \in V$ be the vertex in $G$ from which the path containing $u$ and $v$ start from, respectively. By definition of $S$, $u'$ and $v'$ are both in $S$. Now $d(u',v') = d(u,v) - d(u,u') - d(v,v')$ since the shortest path from $u$ to $v$ must path through both $u'$ and then $v'$ by the construction of $G'$. Since $d(u,u') \leq m$ and $d(v,v') \leq m$ then $d(u',v') \geq d + 1 - m - m = 2$. Hence $u', v'$ are not adjacent in $G$
+\end{enumerate}
+These three cases show that for any two vertices $u,v \in S'$, they get mapped onto two vertices in $S$ such that those two vertices are not adjacent to each other. As this applies for all pairs, then $S$ is an independent set since no two vertices share an edge.
+
+% For even $d = 2m$, the definition of $S$ is exactly the same and the proof is very similar, except since we now have that $G'$ was constructed on $G^2$ we have some new bounds on 
 
 % In other words, given any instance $(G=(V,E), k)$ of \textsc{Independent Set}, we describe an FPT algorithm that contructs an equivalent instance $(G'=(V',E'), k')$ of $d$-\textsc{Packing}.
 
