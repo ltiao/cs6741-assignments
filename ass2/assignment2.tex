@@ -269,15 +269,9 @@ Therefore, \textsc{Packing Coloring} can be solved in $\mcO^*(2.2377^n)$ time an
 
 We restrict our attention to \emph{maximal} $d$-packings. A $d$-packing is maximal if it is not a proper subset of any other $d$-packing. Observe that for any vertex $v$ of $G$, every maximal $d$-packing contains a vertex from $N_G^d[v]$: if a vertex $v$ is in $d$-packing $S$ then no vertex in its neighborhood of radius $d$ can be in $S$. On the other hand, if $S$ is a maximal $d$-packing and $v \notin S$ then at least one vertex in its neighborhood of radius $d$ must be in $S$ since, otherwise, $S\cup \{ v \}$ would be a larger $d$-packing, contradicting the optimality of $S$.
 
-$\Delta = \Delta(G)$
+So for a graph $G = (V, E)$, we select any vertex $v \in V$ and branch on each vertex $u$ in its neighborhood of radius $d$ $N_G^d[v]$, recursively checking whether $G-N_G^d[v]$ is a $d$-packing of size $k-1$. 
 
-We have a $|N_G^d[v]|$-way branching
-
-Since $k$ decreases by 1 in each branch, and the number of branches
-
-$|N_G^d[v]| \leq \sum_{i=0}^{d} \Delta^i = \frac{\Delta^{d+1}-1}{\Delta-1} = \mcO(\Delta^{d+1})$ 
-
-so we obtain a running time of $\mcO^{*}((\Delta^{d+1})^k)$
+Abbreviate $\Delta = \Delta(G)$. We have a $|N_G^d[v]|$-way branching for vertex $v \in V$. Since $|N_G^d[v]| \leq \sum_{i=0}^{d} \Delta^i = \frac{\Delta^{d+1}-1}{\Delta-1} = \mcO(\Delta^{d+1})$ and as $k$ decreases by 1 in each branch, we obtain a running time of $\mcO^{*}((\Delta^{d+1})^k)$ since we only require $n^{\mcO(1)}$ in each node of the recursive call tree. The algorithm is summmarized in \cref{algo:packing}.
 
 \begin{algorithm}[H]
 \caption{\texttt{Packing}}          % give the algorithm a caption
@@ -291,7 +285,7 @@ so we obtain a running time of $\mcO^{*}((\Delta^{d+1})^k)$
 \If{$k = 0$}{
 	\textbf{return} \texttt{true}
 }
-\ElseIf{other base case(s) goes here}{
+\ElseIf{$k > |V|$}{
 	\textbf{return} \texttt{false}
 }
 \Else{
@@ -304,6 +298,8 @@ so we obtain a running time of $\mcO^{*}((\Delta^{d+1})^k)$
 	}
 }
 \end{algorithm}
+
+Since \texttt{Packing} is a parameterized branching algorithm with running time $(\Delta^{d+1})^k \cdot n^{\mcO^(1)}$, \textsc{Packing} is FPT for parameter $k + d + \Delta (G)$.
 
 \clearpage
 \section{$d$-\sc Packing \textnormal{is $W[1]$-hard for parameter $k$}}
