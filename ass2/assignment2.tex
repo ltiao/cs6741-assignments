@@ -310,15 +310,13 @@ so we obtain a running time of $\mcO^{*}((\Delta^{d+1})^k)$
 
 % \todo{Formalize and Proofread}
 
-We show that the $d$-\textsc{Packing} problem is $W[1]$-hard for parameter $k$ by providing a parameterized reduction from a well-known $W[1]$-hard problem, namely, \textsc{Independent Set}.	
+We show that the $d$-\textsc{Packing} problem is $W[1]$-hard for parameter $k$ by providing a parameterized reduction from a well-known $W[1]$-hard problem, namely, \textsc{Independent Set}.	For $d = 0$ and $d = 1$ the reduction is trivial as we don't alter the input graph $G$ and $k$. So we work on $d \geq 2$.
 
 \textbf{Construction:} Let $(G = (V,E) ,k)$ be an instance for $\textsc{Independent Set}$. We construct an instance $(G' = (V',E'),k')$ for $d-$\textsc{Packing}. First set $k' \leftarrow k$. 
 
 For odd $d = 2m+1$ where $m$ is a natural number, for every vertex $v \in V$ we append a path of length $m$ to $v$. In other words we add $m$ vertices $v_1, v_2, ..., v_m \in V'$ and $vv_1, v_1v_2,...,v_{m-1}v_m \in E'$ for every vertex $v$.
-
-\todo{Still haven't thought of a good even case}
-
-For even $d = 2m$,
+For even $d = 2m$, where $m > 1$ we add a path graph of $m$ vertices as described for the odd case of $d = 2m - 1$. Then we also add a vertex $w_{uv} \in V'$ if $uv \in E$.
+The last case is for $d = 2$ where we add a vertex $w_{uv} \in V'$ if $uv \in E$ and also add an edge between all these new added vertices, that is to say $w_{i,j}w_{k,l} \in E'$ if $w_{i,j},w_{k,l} \in V'$ and $ij \in E$ and $kl \in E$.
 
 % we first construct the square of $G^2$ obtained by taking $G$ and adding edges between all pairs of distinct vertices that are of distance at most 2 apart in $G$. Then we add a path graph of $m$ vertices as described for the odd case $d + 1 = 2m+1$ to every vertex $v \in V$ onto the square graph $G^2$.
 
@@ -379,77 +377,106 @@ For even $d = 2m$,
 \begin{figure}[ht]
 \centering
 \begin{minipage}{.5\textwidth}
-  	\centering
-  	\begin{tikzpicture}[shorten >= 1pt, node distance=1cm, auto, inner sep=0pt]
+	\centering
+	\begin{tikzpicture}[shorten >= 1pt, node distance=2cm, auto, inner sep=0pt]
 		\node[state, minimum size = 20pt] (1) {};
 		\node[state, minimum size = 20pt] (2) [below=of 1] {$v$};
 		\node[state, minimum size = 20pt] (3) [right=of 1] {};
 		\node[state, minimum size = 20pt] (4) [above left=of 1] {$u$};
+		\draw [black, fill] (-1,1) circle [radius = 0.15];
+		\draw [black, fill] (1.4,0) circle [radius = 0.15];
+		\draw [black, fill] (0,-1.4) circle [radius = 0.15];
+		\draw [black, fill] (1.35,-1.35) circle [radius = 0.15];
+
+		\node[state, minimum size = 10pt] (5) [above=of 4] {};
+		% \node[state, minimum size = 10pt] (6) [above=of 5] {$u_2$};
+		\node[state, minimum size = 10pt] (7) [above=of 1] {};
+		% \node[state, minimum size = 10pt] (8) [above=of 7] {};
+		\node[state, minimum size = 10pt] (9) [right=of 2] {};
+		% \node[state, minimum size = 10pt] (10) [right=of 9] {$v_2$};
+		\node[state, minimum size = 10pt] (11) [right=of 3] {};
+		% \node[state, minimum size = 10pt] (12) [right=of 11] {};
 
 		\path[] (1) edge (2);
 		\path[] (1) edge (3);
 		\path[] (1) edge (4);
 		\path[] (2) edge (3);
-		% \path[] (2) edge (4);
-		% \path[] (4) edge (3);
+
+		\path[dashed] (4) edge (5);
+		% \path[dashed] (5) edge (6);
+		\path[dashed] (1) edge (7);
+		% \path[dashed] (7) edge (8);
+		\path[dashed] (2) edge (9);
+		% \path[dashed] (9) edge (10);
+		\path[dashed] (3) edge (11);
+		% \path[dashed] (11) edge (12);
 		
 	\end{tikzpicture}
-	\caption{Square graph $G^2$}
+	\caption{$G'$ construction for $d = 4$}
 \end{minipage}%
 \begin{minipage}{.5\textwidth}
 	\centering
 	\begin{tikzpicture}[shorten >= 1pt, node distance=1cm, auto, inner sep=0pt]
 		\node[state, minimum size = 20pt] (1) {};
-		\node[state, minimum size = 20pt] (2) [below=of 1] {$v$};
-		\node[state, minimum size = 20pt] (3) [right=of 1] {};
-		\node[state, minimum size = 20pt] (4) [above left=of 1] {$u$};
 
-		\node[state, minimum size = 10pt] (5) [above=of 4] {};
-		\node[state, minimum size = 10pt] (6) [above=of 5] {$u_2$};
-		\node[state, minimum size = 10pt] (7) [above=of 1] {};
-		\node[state, minimum size = 10pt] (8) [above=of 7] {};
-		\node[state, minimum size = 10pt] (9) [right=of 2] {};
-		\node[state, minimum size = 10pt] (10) [right=of 9] {$v_2$};
-		\node[state, minimum size = 10pt] (11) [right=of 3] {};
-		\node[state, minimum size = 10pt] (12) [right=of 11] {};
+		\node[state, minimum size = 10pt] (2) [below=of 1] {};
+		\node[state, minimum size = 20pt] (3) [below=of 2] {$v$};
+
+
+		\node[state, minimum size = 10pt] (4) [right=of 1] {};
+		\node[state, minimum size = 20pt] (5) [right=of 4] {};
+		
+		\node[state, minimum size = 10pt] (6) [above left=of 1] {};
+		\node[state, minimum size = 20pt] (7) [above left=of 6] {$u$};
+
+		\node[state, minimum size = 10pt] (8) [above right=of 3] {};
+
 
 		\path[] (1) edge (2);
-		\path[] (1) edge (3);
 		\path[] (1) edge (4);
+		\path[] (1) edge (6);
 		\path[] (2) edge (3);
-		% \path[] (2) edge (4);
-		% \path[] (4) edge (3);
+		\path[] (4) edge (5);
+		\path[] (6) edge (7);
+		\path[] (3) edge (8);
+		\path[] (5) edge (8);
 
-		\path[dashed] (4) edge (5);
-		\path[dashed] (5) edge (6);
-		\path[dashed] (1) edge (7);
-		\path[dashed] (7) edge (8);
-		\path[dashed] (2) edge (9);
-		\path[dashed] (9) edge (10);
-		\path[dashed] (3) edge (11);
-		\path[dashed] (11) edge (12);
+		\path[dashed] (2) edge (4);
+		\path[dashed] (2) edge (6);
+		\path[dashed] (2) edge (8);
+		\path[dashed] (4) edge (8);
+		\path[dashed] (4) edge (6);
+		\path[dashed, bend right = 90] (6) edge (8);
+		
+		
+
 		
 	\end{tikzpicture}
-	\caption{$G'$ construction for $d = 4$}
+	\caption{$G'$ construction for $d = 2$}
 \end{minipage}
 \end{figure}
 
 \clearpage
 
-\textbf{Equivalence}: We will show that $G$ has an independent set of size $k$ iff $G'$ has a $d$-packing of size $k$.  In all following proofs, $m \in \N$ and $m \geq 1$.
+\textbf{Equivalence}: We will show that $G$ has an independent set of size $k$ iff $G'$ has a $d$-packing of size $k$.  In all following proofs, $m \in \N$ and $m \geq 1$. Furthermore, we may assume that both $G$ and $G'$ do not contain isolated vertices since if $x$ is isolated then $(G,k)$ reduces to $(G\bs\{x\},k-1)$ in both instances. 
 
 $(\Rightarrow):$ Suppose that $S \subseteq V$ is an independent set of size $k$ in $G$.
 
-For odd $d = 2m+1$, consider an arbitrary vertex $s \in S$. After the construction of $G'$, let $s_m$ denote the $m$th vertex at the end of the path added to $s$. (We also remark that $\mathrm{deg}_{G'}(s_m) = 1$ as it is a pendant vertex.) Then consider the set
+\textbf{Odd Case:} For odd $d = 2m+1$, consider an arbitrary vertex $s \in S$. After the construction of $G'$, let $s_m$ denote the $m$th vertex at the end of the path added to $s$. (We also remark that $\mathrm{deg}_{G'}(s_m) = 1$ as it is a pendant vertex.) Then consider the set
 \[ S' = \{ s_m : s_m \in V' \text{ corresponding to } s \in S \}\]
 which has size $k$ since $|S| = k$.
-Since $S$ is an independent set, then $d(u,v) \geq 2$. Due to the construction, then $d(u_m,u) = d(v_m,v) = m$ in $G'$. Hence $d(u_m,v_m) = d(u_m,u) + d(u,v) + d(v,v_m) \geq 2m + 2$ in $G'$. As this is true of any two vertices $u_m, v_m \in S'$, the shortest path between any two vertices of $S'$ is $2m+2 = d+ 1$, making $S'$ a $d$-packing of size $k$.
+Since $S$ is an independent set, then for two arbitrary vertices $u,v \in S$, $d(u,v) \geq 2$. Due to the construction, then $d(u_m,u) = d(v_m,v) = m$ in $G'$. Hence $d(u_m,v_m) = d(u_m,u) + d(u,v) + d(v,v_m) \geq 2m + 2$ in $G'$. As this is true of any two vertices $u_m, v_m \in S'$, the shortest path between any two vertices of $S'$ is $2m+2 = d+ 1$, making $S'$ a $d$-packing of size $k$.
 
-For even $d = 2m$, the proof proceeds exactly the same as the odd case, including the construction of $S'$ (and $|S'| = k$) except that for two vertices $u_m, v_m \in S'$ are the pendant vertices of paths staring from $u, v \in S$ with the property $d(u,v) \geq 1$ in $G'$ as we constructed $G'$ from the square graph $G^2$. Now this means that we have a lower bound on the distance $d(u_m,v_m) = d(u_m,u) + d(u,v) + d(v_m,v) \geq 2m + 1$. But as this indicates that for any two vertices $S'$ are at least a distance $2m + 1 = d+1$ away meaning $S'$ is a $d$-packing of size $k$.
+\textbf{Even Case:} For even $d = 2m$, $m > 1$ the proof is similar to the odd case for $d = 2m - 1 = 2(m-1) + 1$, including the construction of $S'$ (and $|S'| = k$) except that we only add in paths of length $m-1$ and hence we only add $m-1$ new vertices for the path graph, for each vertex $v \in V$. Now due to the construction, for two arbitrary vertices $u,v \in S$ $d(u,v) \geq 4$ in $G'$ as each previous edge of $G$ has been replaced by two edges in $G'$. The corresponding elements $u_{m-1}, v_{m-1} \in S'$ are gained by taking the pendant vertex at the end of the $m-1$ length path graph stemming from $u$ and $v$ respectively. Now $d(u_{m-1},v_{m-1}) = d(u_{m-1},u) + d(u,v) + d(v,v_{m-1}) \geq (m - 1) + 4 + (m-1) = 2m + 2 > 2m + 1$, hence any two vertices in $S'$ are of distance greater than or equal to $2m + 1 = d+1$ meaning S' is a $d$ packing.
+
+\textbf{2-Case:} For $d = 2$, let $S' = S$. Consider two vertices $u,v \in S'$. Let $u' \in V'$ be the closest middle-vertex to $u$, one which was added in the construction of $G'$ for $d=2$. Similarly denote $v'$ for a vertex with the same properties for $v$. Both $u'$ and $v'$ exist since there are no isolated vertices. Now $d(v',u') = 1$ by construction and the fact that $u' \neq v'$ since $uv \notin E$. This means that $d(u,u') = d(v,v') = 1$ as they are the closest middle-vertex and $d(u,v) = d(u,u') + d(u',v') + d(v',v) = 3$, for any vertex $u,v \in S'$. Thus $S'$ is a 2-packing as any two vertices in $S'$ are of distance 3 or greater from each other.
+
+% Now this means that we have a lower bound on the distance $d(u_m,v_m) = d(u_m,u) + d(u,v) + d(v_m,v) \geq 2m + 1$. But as this indicates that for any two vertices $S'$ are at least a distance $2m + 1 = d+1$ away meaning $S'$ is a $d$-packing of size $k$.
+
 
 $(\Leftarrow):$ Suppose that $S' \subseteq V$ is a $d$-packing of size $k$ in $G' = (V', E')$. Notice that $G'$ was constructed from $G$ so let $V \subseteq V'$ denote those vertices in $G'$ which were originally in $G$.
 
-For odd $d = 2m+1$, construct a set $S = \{s_1, s_2, ..., s_m\}$ from $S' = \{s'_1, s'_2, ... ,s'_k\}$ by
+\textbf{Odd Case:} For odd $d = 2m+1$, construct a set $S = \{s_1, s_2, ..., s_m\}$ from $S' = \{s'_1, s'_2, ... ,s'_k\}$ by
 \[ s_i = \begin{cases}
 	s'_i, \text{ if } s'_i \in V & \n
 	v, \text{ if }  s'_i = v_j & \text{for some } v_j \in V' \text{ with $v \in V$ being the start of} \n & \text{the path graph which $v_j$ lies on}
@@ -458,9 +485,56 @@ In other words, we obtain $S$ by taking the elements of $S'$ and mapping them pa
 \begin{enumerate}
 	\item $u,v \in V$ - This means that both vertices in the $d$-packing already lie on $G$. By definition of $S$, $u$ and $v$ are also in $S$. Since both $u,v \in S'$ then $d(u,v) \geq d+1$ in $G$ and in $G'$ which means that they cannot be adjacent in $G$.
 	\item $u \in V$, $v = v_j$ for some added vertex $v_j$ on an added path - Let $v' \in V$ be the vertex which the path containing $v_j$ starts from due to the construction of $G'$. In other words, $v'$ is the vertex from the original graph and $v$ is a path-vertex of the constructed path length $m$ starting from $v'$. By definition of $S$, we place $u$ and $v'$ in $S$. Now $d(v,v') \leq m$ by construction of $G'$. Since $d(u,v') = d(u,v) - d(v,v') \geq d + 1 - m = m + 1$, meaning that $u$ and $v'$ are not adjacent in $G$.
-	\item $u = u_i$ and $v = v_j$ for some added vertex $u_j,v_j$ by construction of $G'$. Let $u' \in V$ and $v' \in V$ be the vertex in $G$ from which the path containing $u$ and $v$ start from, respectively. By definition of $S$, $u'$ and $v'$ are both in $S$. Now $d(u',v') = d(u,v) - d(u,u') - d(v,v')$ since the shortest path from $u$ to $v$ must path through both $u'$ and then $v'$ by the construction of $G'$. Since $d(u,u') \leq m$ and $d(v,v') \leq m$ then $d(u',v') \geq d + 1 - m - m = 2$. Hence $u', v'$ are not adjacent in $G$
+	\item $u = u_i$ and $v = v_j$ for some added vertex $u_j,v_j$ by construction of $G'$ -  Let $u' \in V$ and $v' \in V$ be the vertex in $G$ from which the path containing $u$ and $v$ start from, respectively. By definition of $S$, $u'$ and $v'$ are both in $S$. Now $d(u',v') = d(u,v) - d(u,u') - d(v,v')$ since the shortest path from $u$ to $v$ must path through both $u'$ and then $v'$ by the construction of $G'$. Since $d(u,u') \leq m$ and $d(v,v') \leq m$ then $d(u',v') \geq d + 1 - m - m = 2$. Hence $u', v'$ are not adjacent in $G$
 \end{enumerate}
 These three cases show that for any two vertices $u,v \in S'$, they get mapped onto two vertices in $S$ such that those two vertices are not adjacent to each other. As this applies for all pairs, then $S$ is an independent set since no two vertices share an edge.
+
+\textbf{Even Case:} For even $d = 2m$, we apply the same procedure as we would for odd $d = 2(m-1) + 1$. The construction of $S = \{s_1,s_2,...,s_k\}$ from $S' = \{s'_1,s'_2,...,s'_k\}$ has a new addition for the new added vertices, one for each edge of $G$.
+\[ s_i = \begin{cases}
+	s'_i, \text{ if } s'_i \in V & \n
+	v, \text{ if }  s'_i = v_j & \text{for some } v_j \in V' \text{ with $v \in V$ being the start of} \n & \text{the path graph which $v_j$ lies on} \n
+	u, \text{ if } & s'_i \text{ is a middle vertex and $u$ is one of the 2 vertices adjacent to $s'_i$}. \n
+	& \text{i.e. } us'_i \in E' \n
+\end{cases}\]
+
+So we take two vertices $u,v \in S'$ and consider 6 cases. The addition we need to make is that now $u$ or $v$ could be a \emph{middle-vertex}, a vertex which is added to the edges of the graph $G'$ in the even construction.
+
+\begin{enumerate}
+	\item $u,v \in V$ - As with the odd case, this means by definition of $S$ then both $u,v \in S$ lie on the original graph $G$ with $d(u,v) \geq d + 1 = 2m + 1$ in $G'$, and thus $d(u,v) \geq m$ in $G$, due to the double of edges in the construction of $G'$. Since $m > 1$ then $u,v$ are not adjacent in $G$.
+
+	\item $u,v$ are both a \emph{middle-vertex} - Let $u',v' \in V$ be vertices adjacent to $u$ and $v$ respectively. Now $u' \neq v'$ since $d(u,v) \geq 2m + 2$ as $m>1$ and $d(u,v)$ must be even since the path between two \emph{middle-vertex} alternates between a middle-vertex and an original vertex (from $V$). Then since $d(u',v')$ is even by a similar argument, then as $d(u,u') = 1$ and $d(v,v') = 1$, we have $d(u',v') \geq d(u,v) - d(u,u') - d(v,v') \geq 2m + 2 - 2  = 2m$ in $G'$. This means that $d(u',v') \geq m$ in $G$ as every edge in $G$ was doubled to make an edge in $G'$, and since $m > 1$ then $u',v' \in S$ are not adjacent in $G$.  
+
+	\item $u = u_i$ and $ v = v_j$ for some vertex on the added path of length $m-1$. Denote $u'$ and $v'$ as the vertex in $G$ from which the path containing $u$ and $v$ start from respectively. By construction of $S$, both $u'$ and $v'$ are in $S$. Now since $d(u,u') \leq m-1$, $d(v,v') \leq m-1$ and $d(u,v) \geq 2m + 1$ then $d(u',v') = d(u,v) - d(u,u') - d(v,v') \geq 2m + 1 - (m-1) - (m-1) \geq 3$ in $G'$. We have argued before that $d(u',v')$ is an even number since $u'$ and $v'$ lie on the original graph $G$, and the construction of $G'$ doubles those edges. As $d(u',v') \geq 4$ in $G'$ means $d(u',v') \geq 2$ in G then $u',v' \in S$ are not adjacent.
+
+	\item $u \in V$ and $v = v_j$ for some vertex on the added path. We look for $v' \in V$ such that $v$ lies on the path graph of length $m-1$ extended from vertex $v'$. By construction of $S$ we get that $u,v' \in S$. Now since $d(u,v) \geq 2m+1$ and $d(v,v') \leq m - 1$ then $d(u,v') = d(u,v) - d(v,v') \geq 2m + 1 - (m-1) = m + 2 \geq 3$ in $G'$. As $u,v'$ are both in $V$ then by the even length counting argument we had above, $d(u,v') \geq 4$ in $G'$ and hence $d(u,v') \geq 2$ in $G$ meaning $u,v'$ are not adjacent in $G$.
+
+	\item $u \in V$ and $v$ is a \emph{middle-vertex} - Denote $v' \in V$ to be one of the two possible vertices in $G$ that $v$ is adjacent to (WLOG we pick one of them and assume worst path bounds). By construction of $S$ from $S'$ we get that $v' \in S$. Then $d(v,v') = 1$ and $d(u,v) \geq 2m+1$ meaning that $d(u,v') \geq d(u,v) - d(v,v') \geq 2m + 1 -1 = 2m$ in $G'$. Since there are twice as many edges in $G'$ by construction then $d(u,v') \geq m$ in $G$ but as $m > 1$ then $u,v' \in S$ are not adjacent in $G$.  
+
+	\item $u = u_i$ and $v$ is a \emph{middle-vertex} - Denote $u' \in V$ to be the vertex in $G$ from which the path of length $m-1$ containing $u$ starts from. Denote $v' \in V$ to be a vertex adjacent to $v$, of which there is guaranteed to be one. $u',v' \in S$ by construction. Now $d(u,v) \geq 2m+1$, $d(u,u') \leq m-1$ and $d(v,v') = 1$. Then $d(u',v') \geq d(u,v) - d(u,u') - d(v,v') = 2m+1 - (m-1) - 1 = m + 1 \geq 3$ in $G'$. We have seen above that the fact that $u',v' \in V$ then $d(u',v')$ is even hence $d(u',v') \geq 4$ in $G'$. As $G'$ doubles edges in $G$ by construction then $d(u',v') \geq 2$ in $G$.
+\end{enumerate}
+
+These 6 cases cover all possible configurations for any two vertices $u,v \in S'$. As we have shown, by following the construction of $S$, in all cases, any two vertices in $S$ will not be adjacent in $G$. Hence $S$ is an independent set.
+
+\textbf{2-Case:} Lastly, for $d = 2$, we consider two vertices $u,v \in S'$ and attempt to characterize them. Let the vertices added in the construction of $G'$ for $d = 1$ be denoted as \emph{middle-vertices}. There are three cases:
+
+\begin{enumerate}
+	\item $u,v \in V$
+	\item $u \in V$, $v$ is a \emph{middle-vertex}
+	\item $u$ and $v$ are middle vertices.
+\end{enumerate}
+
+Now since $u,v \in S'$ which is a 2-packing then $d(u,v) \geq 3$. Now in Case 3, by construction $d(u,v) = 1$ since all middle vertices are adjacent to all other middle vertices, hence $u,v$ cannot satisfy case 3. 
+
+In Case 2, there exists a \emph{middle-vertex} $u'$ which is adjacent to $u$ since there are no isolated vertices. That is to say, $d(u,u') = 1$. Now $d(u',v) = 1$ since both $u'$ and $v$ are \emph{middle-vertices} meaning $d(u,v) = 2$. Hence $u,v$ cannot satisfy Case 2.
+
+This means that any two vertices $u,v \in S'$ must satisfy case 1.
+
+An independent set $S = \{s_1,s_2,...,s_k\}$ is constructed from $S' = \{s_1,s_2,...,s_k\}$, that is to say that a 2-packing on $G'$ corresponds directly to an independent set. This is because we have shown that $S'$ only contains vertices in $V$, the original vertex set of $G$ and the fact that if $u,v$ were in fact adjacent then $d(u,v) = 2$ in $G'$ which contradicts $d(u,v) \geq 3$. Thus $S$ is an independent set for $G$.
+
+Now as we have exhausted all cases, then any \textsc{Yes} instance of \textsc{Independent Set} corresponds to a \textsc{Yes} instance of $d-$\textsc{Packing} for any fixed $d$.
+
+% Now notice that since every vertex is next to a \emph{middle-vertex}, we can let $u'$ and $v'$ be a middle-vertex next to $u,v$ respectively. Now $u' \neq v'$ since otherwise that would mean $d(u,v) = 2$, a contradiction. 
+
 
 % For even $d = 2m$, the definition of $S$ is exactly the same and the proof is very similar, except since we now have that $G'$ was constructed on $G^2$ we have some new bounds on 
 
