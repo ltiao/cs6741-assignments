@@ -271,7 +271,7 @@ We restrict our attention to \emph{maximal} $d$-packings. A $d$-packing is maxim
 
 So for a graph $G = (V, E)$, we select any vertex $v \in V$ and branch on each vertex $u$ in its neighborhood of radius $d$ $N_G^d[v]$, recursively checking whether $G-N_G^d[v]$ is a $d$-packing of size $k-1$. 
 
-Abbreviate $\Delta = \Delta(G)$. We have a $|N_G^d[v]|$-way branching for vertex $v \in V$. Since $|N_G^d[v]| \leq \sum_{i=0}^{d} \Delta^i = \frac{\Delta^{d+1}-1}{\Delta-1} = \mcO(\Delta^{d+1})$ and as $k$ decreases by 1 in each branch, we obtain a running time of $\mcO^{*}((\Delta^{d+1})^k)$ since we only require $n^{\mcO(1)}$ in each node of the recursive call tree. The algorithm is summmarized in \cref{algo:packing}.
+Abbreviate $\Delta = \Delta(G)$. We have a $|N_G^d[v]|$-way branching for vertex $v \in V$. Since $|N_G^d[v]| \leq \sum_{i=0}^{d} \Delta^i = \frac{\Delta^{d+1}-1}{\Delta-1} = \mcO(\Delta^{d+1})$ and as $k$ decreases by 1 in each branch, we obtain a running time of $\mcO^{*}((\Delta^{d+1})^k)$ since we only require $n^{\mcO(1)}$ time in each node of the recursive call tree. The algorithm is summmarized in \cref{algo:packing}.
 
 \begin{algorithm}[H]
 \caption{\texttt{Packing}}          % give the algorithm a caption
@@ -567,29 +567,31 @@ By virtue of the fact that \textsc{Independent Set} is W[1]-hard and there is a 
 
 \section{\sc Packing \textnormal{is FPT for parameter $d + tw(G)$}}
 
-We formalize the property of a graph having a $d$-packing of size $k$ in Monadic Second Order Logic (MSOL) using a formula of length $\mcO(d)$,
+We formalize the property of a graph having a $d$-packing of size $k$ in Monadic Second Order Logic (MSOL) using a formula of length $d^{\mcO(1)}$,
+
 \begin{align*}
 	\mathrm{path}(s, t, d) 		&\coloneqq \exists v_0 \in V, \exists v_1 \in V, \dotsc, \exists v_d \in V
 									\left [ (s=v_0) \wedge (t=v_d) \right.\nonumber \\
 								&\qquad \left. \wedge (adj(v_0, v_1) \wedge adj(v_1, v_2) 
 									\wedge \dots \wedge adj(v_{d-1}, v_d)) \right ] \\
-	\mathrm{isPacking}(X, d)	&\coloneqq \neg \left [\exists u \in X, \exists v \in X (\mathrm{path}(u, v, 1) 
+	\mathrm{Packing}_d(X)	&\coloneqq \neg \left [\exists u \in X, \exists v \in X (\mathrm{path}(u, v, 1) 
 									\vee \mathrm{path}(u, v, 2) \vee \dots \vee \mathrm{path}(u, v, d) ) \right ]
 \end{align*}
 
-In Arnborg et al.'s \cite{Arnborg1991} extension of Courcelle's Theorem gives us an FPT algorithm which takes as an input a graph $G$ and a Monadic Second Order sentence $F(X)$ and computes a minimize size set of vertices $X$ such that $F(X)$ is true in $G$. Here the parameter used to calculate the parameterized complexity is $|F(X)| + tw(G)$. 
+By Courcelle's Theorem, deciding whether a graph satisfies the properties defined by a MSOL formula is FPT, parameterized by the treewidth of $G$ and the length of the formula. However, since we also require the size of the $d$-packing to be $k$, we must also formalize this property in the MSOL expression, causing its length to become dependent on $k$.
 
-In \textsc{Packing} we return whether or not a $d-$packing of size $k$ on a graph $G$ with treewidth $tw(G)$ exist. This can be achieved by acquiring $X$, the minimize size of a a $d-$packing in a graph $G$ with treewidth $tw(G)$ by Arnborg's FPT extension of Courcelle's Theorem using the MSOL sentence isPacking$(G,d)$. Once this minimum size $d-$packing $X$ is acquired, then a simple check if $|X| \leq k$ will ensure that a $d$-packing of size $k$ exists for $G$. If $|X| > k$ then $G$ does not have a $k$ sized $d-$packing.
+Fortunately, Arnborg et al. \cite{Arnborg1991}, among other contributions, generalizes Courcelle's Theorem to the Extended Monadic Second Order Logic (briefly denoted EMSOL) which combines a MSOL formula with a formula involving the sums of \textit{evaluations} over sets. As such, the EMSOL incorporates \textit{evaluation terms} built from arithmetic operators with its atoms being rational numbers and cardinalities of sets ($|\cdot|$) and \textit{evaluation relations} (c.f. \cite[p.~316]{Arnborg1991}).
 
-% \todo{Discussion: Set cardinality is technically not a part of MSOL. Of course we can define it, but the length of the formula is $\mcO(k^2)$.}
+So the property that $X$ is a $d$-packing of size $k$ can now be expressed in EMSOL as before but with an additional evaluation relation
+\begin{equation*}
+	Card_k(X)	\coloneqq |X| = k
+\end{equation*}
 
-% By Courcelle's Theorem, deciding whether a graph satisfies the properties defined by a MSOL formula is FPT, parameterized by the treewidth of $G$ and the length of the formula, which in our case is $\mcO(d)$.
+subject to the constraint $\mathrm{Packing}_d(X)$.
 
-The usage of Arnborg's FPT extension of Courcelle's theorem with the MSOL sentence isPacking$(G,d)$ guarantees that finding a satisfying minimum size graph $X$ is FPT, parameterized by $tw(G) + |$isPacking$(G,d)| = tw(G) + d$. As checking if $|X| \leq k$ is a constant time operation therefore it immediately follows that \textsc{Packing} is FPT for parameter $d+tw(G)$ where $tw(G)$ denotes the treewidth of $G$.
+Since $\mathrm{Packing}_d(X)$ is an open MSO formula with free variable $X$, we obtain a FPT algorithm by \cite{Arnborg1991} parameterized by $tw(G)+|\mathrm{Packing}_d(X)|$. Therefore, \textsc{Packing} is FPT for parameter $d+tw(G)$ where $tw(G)$ denotes the treewidth of $G$.
 
 \bibliographystyle{plain}
 \bibliography{asst2}
-
-\todo{Thanks to mendeley, the references are actually kinda shit. fix this up if we have time}
 
 \end{document}
