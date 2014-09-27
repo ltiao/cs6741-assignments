@@ -124,9 +124,6 @@
 \begin{document}
 \maketitle
 
-\todo{Consistency between British and American spelling (i.e. colour vs. color) Edward: Let's go with American? Serge's questions use color}
-\todo{Spellcheck}
-
 \section*{Preliminaries}
 
 For completeness and later reference, we restate the \textsc{Packing}, $d$-\textsc{Packing}, \#\textsc{Packing} and \textsc{Packing Coloring} problems presented in this assignment.
@@ -208,10 +205,11 @@ We summarize the above in \cref{algo:num_packing} and denote it as \texttt{\#Pac
 	Let $G^d = (V,E')$ where $E' = E \cup E^*$ and $E^* = \{ uv : d_G(u,v) \leq d \}$\n
 	\textbf{return} \texttt{\#Indep-set}($G^d$)
 }
-
 \end{algorithm}
 
 Finally, we see that in all cases (i.e. for all $d \ge 0$), \texttt{\#Packing} runs in polynomial space and $\mcO^*(1.2377^n)$ time.
+
+\clearpage
 
 \section{\sc Packing Coloring  (\textnormal{Exponential space})}
 
@@ -271,9 +269,41 @@ Therefore, \textsc{Packing Coloring} can be solved in $\mcO^*(2.2377^n)$ time an
 
 \section{\sc Packing \textnormal{is FPT for parameter $k + d + \Delta (G)$} }
 
-\todo{Formalize and Proofread}
+We restrict our attention to \emph{maximal} $d$-packings. A $d$-packing is maximal if it is not a proper subset of any other $d$-packing. Observe that for any vertex $v$ of $G$, every maximal $d$-packing contains a vertex from $N_G^d[v]$: if a vertex $v$ is in $d$-packing $S$ then no vertex in its neighborhood of radius $d$ can be in $S$. On the other hand, if $S$ is a maximal $d$-packing and $v \notin S$ then at least one vertex in its neighborhood of radius $d$ must be in $S$ since, otherwise, $S\cup \{ v \}$ would be a larger $d$-packing, contradicting the optimality of $S$.
 
-From (1) we can reduce \textsc{Packing} to \textsc{Independent set} in poly-time with parameter $d$. We know that Independent set and Vertex cover can easily be reduced, but with a parameter $k$, Independent set is $W[1]$-hard and not FPT since we are looking for a vertex cover of size $n-k$. However, since we have $\Delta(G)$ as a parameter, we just run \textsc{Vertex Cover} with size $\Delta(G) \times k$, which is still FPT in parameter $k + d + \Delta(G)$.
+We have a $|N_G^d[v]|$-way branching
+
+Since $k$ decreases by 1 in each branch, and the number of branches
+
+$|N_G^d[v]| \leq \sum_{i=0}^{d} \Delta(G)^i = \mcO(\Delta(G)^d)$ 
+
+so we obtain a running time of $\mcO^{*}(\Delta(G)^{kd})$
+
+\begin{algorithm}[H]
+\caption{\texttt{Packing}}          % give the algorithm a caption
+\label{algo:packing} 
+\texttt{Packing}\n
+\begin{tabular}{l l}
+ Input:  & ($G, d, k$) \n
+ Output: & \texttt{true} if $G$ has $d$-packings of size $k$; \texttt{false} otherwise. \n
+\end{tabular}	
+
+\If{$k = 0$}{
+	\textbf{return} \texttt{true}
+}
+\ElseIf{other base case(s) goes here}{
+	\textbf{return} \texttt{false}
+}
+\Else{
+	Select a vertex $v \in V$.
+
+	\For{$u \in N_G^d[v]$}{	
+		\If {\texttt{Packing}($G-N_G^d[u], d, k-1$)} {
+			\textbf{return} \texttt{true}
+		}
+	}
+}
+\end{algorithm}
 
 \section{$d$-\sc Packing \textnormal{is $W[1]$-hard for parameter $k$}}
 
